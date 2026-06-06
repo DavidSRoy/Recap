@@ -11,6 +11,7 @@ final class ASRStreamer {
     private var processingTask: Task<Void, Never>?
     private var audioEngine: AudioEngineManager?
     private var filePlayer: FilePlayer?
+    private var shouldStop = false
 
     // 8 s max, 700 ms silence threshold at 16 kHz
     private let maxSamples = 128_000
@@ -22,7 +23,6 @@ final class ASRStreamer {
     private static var sharedKit: WhisperKit?
     private static var loadTask: Task<WhisperKit?, Never>?
 
-    /// Call at app launch so the model is warm before first recording.
     static func preload(onStatus: (@MainActor (String) -> Void)? = nil) async {
         if sharedKit != nil { return }
 
@@ -53,6 +53,7 @@ final class ASRStreamer {
     // MARK: - Public interface
 
     func startMic() throws {
+        shouldStop = false
         acc.reset(startMs: nowMs())
         let engine = AudioEngineManager()
         let acc = self.acc
@@ -65,6 +66,7 @@ final class ASRStreamer {
     }
 
     func startFile(url: URL, realtime: Bool) throws {
+        shouldStop = false
         acc.reset(startMs: nowMs())
         let player = FilePlayer()
         let acc = self.acc
@@ -77,16 +79,17 @@ final class ASRStreamer {
     }
 
     func stop() {
-        processingTask?.cancel()
+        // Signal the loop to exit — does NOT cancel the task so in-flight
+        // transcription can finish and deliver its segment.
+        shouldStop = true
         audioEngine?.stop()
         filePlayer?.stop()
-        print("[ASRStreamer] stopped")
+        print("[ASRStreamer] stop requested")
     }
 
     // MARK: - Processing loop
 
     private func run() async {
-        // Use pre-loaded kit, or load now as fallback
         let wk: WhisperKit
         if let cached = Self.sharedKit {
             wk = cached
@@ -101,14 +104,20 @@ final class ASRStreamer {
         }
 
         print("[ASRStreamer] processing loop started")
-        while !Task.isCancelled {
+        while !shouldStop {
             await checkAndEmit(wk: wk)
-            try? await Task.sleep(nanoseconds: 50_000_000)  // poll every 50 ms
+            guard !shouldStop else { break }
+            // Sleep is interruptible by shouldStop check above; 50 ms is fine.
+            try? await Task.sleep(nanoseconds: 50_000_000)
         }
 
-        // flush remainder on stop
+        // Flush any remaining audio after stop.
         let (tail, startMs) = acc.drain()
-        if !tail.isEmpty { await transcribeAndEmit(tail, startMs: startMs, wk: wk) }
+        if !tail.isEmpty {
+            print("[ASRStreamer] flushing \(tail.count) samples on stop")
+            await transcribeAndEmit(tail, startMs: startMs, wk: wk)
+        }
+        print("[ASRStreamer] processing loop exited")
     }
 
     private func checkAndEmit(wk: WhisperKit) async {
@@ -136,20 +145,20 @@ final class ASRStreamer {
 
     private func transcribeAndEmit(_ samples: [Float], startMs: Int, wk: WhisperKit) async {
         guard !samples.isEmpty else { return }
-        print("[ASRStreamer] transcribing \(samples.count) samples (\(samples.count/16000)s)")
+        print("[ASRStreamer] transcribing \(samples.count) samples (\(samples.count / 16_000)s)")
         do {
             let results = try await wk.transcribe(audioArray: samples)
             let text = results.map(\.text).joined(separator: " ")
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else {
-                print("[ASRStreamer] empty transcription")
+                print("[ASRStreamer] empty transcription result")
                 return
             }
 
             let endMs = nowMs()
             let id = segmentId
             segmentId += 1
-            print("[ASRStreamer] segment \(id): \(text.prefix(60))")
+            print("[ASRStreamer] segment \(id): \(text.prefix(80))")
 
             logger?.log("segment_end", [
                 "segment_id": id,
