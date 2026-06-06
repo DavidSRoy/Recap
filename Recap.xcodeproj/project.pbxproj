@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0003 /* WhisperKit */; };
+		AA9900011FD00001AABB0007 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0004 /* MLX */; };
+		AA9900011FD00001AABB0008 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0005 /* MLXLLM */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		029788F82FD46FF100AC29A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */,
+				AA9900011FD00001AABB0007 /* MLX in Frameworks */,
+				AA9900011FD00001AABB0008 /* MLXLLM in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +121,9 @@
 			);
 			name = Recap;
 			packageProductDependencies = (
+				AA9900011FD00001AABB0003 /* WhisperKit */,
+				AA9900011FD00001AABB0004 /* MLX */,
+				AA9900011FD00001AABB0005 /* MLXLLM */,
 			);
 			productName = Recap;
 			productReference = 029788EA2FD46FEF00AC29A4 /* Recap.app */;
@@ -199,6 +211,10 @@
 			productRefGroup = 029788EB2FD46FEF00AC29A4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */,
+				AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */,
+			);
 			targets = (
 				029788E92FD46FEF00AC29A4 /* Recap */,
 				029788F62FD46FF100AC29A4 /* RecapTests */,
@@ -394,6 +410,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Recap/Recap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -402,6 +419,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recap records audio to generate live summaries.";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -426,6 +444,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Recap/Recap.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -434,6 +453,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recap records audio to generate live summaries.";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -573,6 +593,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
+		AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ml-explore/mlx-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA9900011FD00001AABB0003 /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
+		AA9900011FD00001AABB0004 /* MLX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLX;
+		};
+		AA9900011FD00001AABB0005 /* MLXLLM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */;
+			productName = MLXLLM;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 029788E22FD46FEF00AC29A4 /* Project object */;
 }
