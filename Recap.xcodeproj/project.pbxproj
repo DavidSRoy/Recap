@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0003 /* WhisperKit */; };
 		AA9900011FD00001AABB0007 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0004 /* MLX */; };
-		AA9900011FD00001AABB0008 /* MLXLLM in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0005 /* MLXLLM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +59,6 @@
 			files = (
 				AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */,
 				AA9900011FD00001AABB0007 /* MLX in Frameworks */,
-				AA9900011FD00001AABB0008 /* MLXLLM in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,7 +121,6 @@
 			packageProductDependencies = (
 				AA9900011FD00001AABB0003 /* WhisperKit */,
 				AA9900011FD00001AABB0004 /* MLX */,
-				AA9900011FD00001AABB0005 /* MLXLLM */,
 			);
 			productName = Recap;
 			productReference = 029788EA2FD46FEF00AC29A4 /* Recap.app */;
@@ -623,11 +620,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */;
 			productName = MLX;
-		};
-		AA9900011FD00001AABB0005 /* MLXLLM */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */;
-			productName = MLXLLM;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

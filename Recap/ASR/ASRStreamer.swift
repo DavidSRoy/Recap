@@ -92,8 +92,8 @@ final class ASRStreamer {
     private func transcribeAndEmit(_ samples: [Float], startMs: Int) async {
         guard let wk = whisperKit, !samples.isEmpty else { return }
         do {
-            guard let results = try await wk.transcribe(audioArray: samples),
-                  let first = results.first else { return }
+            let results = try await wk.transcribe(audioArray: samples)
+            guard let first = results.first else { return }
             let text = first.text.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else { return }
 
