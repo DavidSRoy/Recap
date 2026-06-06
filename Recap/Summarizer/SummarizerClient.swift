@@ -3,9 +3,7 @@ import FoundationModels
 
 @Generable
 struct BulletOutput {
-    @Guide(description: "True when the transcript contains no new insights beyond the summary and prior bullets")
-    var keepListening: Bool
-    @Guide(description: "1 to 3 concise bullet points capturing new key ideas. Empty array when keepListening is true.")
+    @Guide(description: "Up to 3 concise bullet points capturing the key new ideas from the transcript. Return an empty array only if the transcript is pure noise, filler words, or contains nothing substantive.")
     var bullets: [String]
 }
 
@@ -46,18 +44,17 @@ final class SummarizerClient {
             logger?.log("first_token", ["segment_id": segmentId])
 
             let tokensIn = prompt.split(separator: " ").count
+            let newBullets = response.content.bullets
             logger?.log("decode_end", [
                 "segment_id": segmentId,
                 "tokens_in": tokensIn,
-                "tokens_out": response.content.bullets.count
+                "tokens_out": newBullets.count
             ])
 
-            if response.content.keepListening {
-                print("[SummarizerClient] keepListening")
+            guard !newBullets.isEmpty else {
+                print("[SummarizerClient] keepListening (empty bullets)")
                 return .keepListening
             }
-            let newBullets = response.content.bullets
-            guard !newBullets.isEmpty else { return .keepListening }
             print("[SummarizerClient] \(newBullets.count) bullets: \(newBullets.first ?? "")")
             return .bullets(newBullets)
         } catch {

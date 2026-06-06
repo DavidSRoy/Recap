@@ -5,11 +5,10 @@ enum PromptTemplates {
 
     static func planner(summary: String, window: String, lastBullets: [String]) -> String {
         """
-        Long summary (<=500 words): \(summary.isEmpty ? "(none yet)" : summary)
-        Recent 60s transcript: \(window)
+        Long summary: \(summary.isEmpty ? "(none yet)" : summary)
+        Recent transcript: \(window)
         Prior bullets: \(lastBullets.isEmpty ? "(none)" : lastBullets.joined(separator: "; "))
-        Rules: Set keepListening=true if no new idea beyond the summary and prior bullets. \
-        Otherwise set keepListening=false and provide 1–3 concise bullets.
+        Extract up to 3 concise bullet points covering new key ideas not already in the summary or prior bullets. Return empty bullets only if the transcript is noise or silence.
         """
     }
 
