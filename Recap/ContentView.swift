@@ -3,6 +3,8 @@ import SwiftUI
 struct ContentView: View {
     @Environment(RecapModel.self) private var model
 
+    private var isModelReady: Bool { model.status == "Ready" || model.isRunning }
+
     var body: some View {
         HSplitView {
             VStack(spacing: 0) {
@@ -35,6 +37,16 @@ struct ContentView: View {
             MetricsOverlay().padding()
         }
         .toolbar {
+            ToolbarItem(placement: .status) {
+                HStack(spacing: 6) {
+                    if !isModelReady {
+                        ProgressView().controlSize(.small)
+                    }
+                    Text(model.status)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     if model.isRunning { model.stop() }
@@ -45,6 +57,7 @@ struct ContentView: View {
                         systemImage: model.isRunning ? "stop.circle.fill" : "mic.circle.fill"
                     )
                 }
+                .disabled(!isModelReady)
                 .keyboardShortcut("r", modifiers: .command)
             }
         }
