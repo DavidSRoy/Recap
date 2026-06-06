@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0003 /* WhisperKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +55,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +115,6 @@
 			);
 			name = Recap;
 			packageProductDependencies = (
-				AA9900011FD00001AABB0003 /* WhisperKit */,
 			);
 			productName = Recap;
 			productReference = 029788EA2FD46FEF00AC29A4 /* Recap.app */;
@@ -202,7 +199,6 @@
 			mainGroup = 029788E12FD46FEF00AC29A4;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 029788EB2FD46FEF00AC29A4 /* Products */;
@@ -415,6 +411,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recap records audio to generate live summaries.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Recap transcribes audio on-device to generate live summaries.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -449,6 +446,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Recap records audio to generate live summaries.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Recap transcribes audio on-device to generate live summaries.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -588,22 +586,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/argmaxinc/WhisperKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		AA9900011FD00001AABB0003 /* WhisperKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */;
-			productName = WhisperKit;
-		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 029788E22FD46FEF00AC29A4 /* Project object */;

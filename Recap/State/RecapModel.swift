@@ -7,7 +7,7 @@ final class RecapModel {
     var bullets: [String] = []
     var summary: String = ""
     var isRunning = false
-    var status = "Loading model…"
+    var status = "Starting…"
 
     let logger: MetricsLogger
     private let session = SessionStore()
@@ -20,16 +20,15 @@ final class RecapModel {
     init() {
         logger = MetricsLogger(sessionId: session.sessionId)
         Task { [weak self] in
-            await ASRStreamer.preload { @MainActor [weak self] msg in
-                self?.status = msg
-            }
+            await ASRStreamer.requestAuthorization()
             await self?.summarizerClient.warmup()
+            self?.status = "Ready"
         }
     }
 
     func startMic() {
         guard status == "Ready" else {
-            print("[RecapModel] model not ready yet: \(status)")
+            print("[RecapModel] not ready: \(status)")
             return
         }
         bullets = []
@@ -46,7 +45,7 @@ final class RecapModel {
 
     func startFile(url: URL, realtime: Bool = true) {
         guard status == "Ready" else {
-            print("[RecapModel] model not ready yet: \(status)")
+            print("[RecapModel] not ready: \(status)")
             return
         }
         bullets = []

@@ -1,6 +1,6 @@
 import Foundation
 import AVFoundation
-import WhisperKit
+import Speech
 
 final class ASRStreamer {
     var onSegment: ((Segment) -> Void)?
@@ -12,42 +12,19 @@ final class ASRStreamer {
     private var audioEngine: AudioEngineManager?
     private var filePlayer: FilePlayer?
     private var shouldStop = false
+    private var recognizer: SFSpeechRecognizer?
 
     // 8 s max, 700 ms silence threshold at 16 kHz
     private let maxSamples = 128_000
     private let silenceSamples = 11_200
     private let silenceRMS: Float = 0.015
 
-    // MARK: - Static pre-load
+    // MARK: - Authorization
 
-    private static var sharedKit: WhisperKit?
-    private static var loadTask: Task<WhisperKit?, Never>?
-
-    static func preload(onStatus: (@MainActor (String) -> Void)? = nil) async {
-        if sharedKit != nil { return }
-
-        if let existing = loadTask {
-            _ = await existing.value
-            return
+    static func requestAuthorization() async {
+        await withCheckedContinuation { continuation in
+            SFSpeechRecognizer.requestAuthorization { _ in continuation.resume() }
         }
-
-        let task = Task<WhisperKit?, Never> {
-            let modelName = WhisperKit.recommendedModels().default
-            await onStatus?("Loading \(modelName)…")
-            print("[ASRStreamer] loading \(modelName)")
-            do {
-                let kit = try await WhisperKit(model: modelName, verbose: false)
-                print("[ASRStreamer] model ready")
-                await onStatus?("Ready")
-                return kit
-            } catch {
-                print("[ASRStreamer] load error: \(error)")
-                await onStatus?("Model load failed — check console")
-                return nil
-            }
-        }
-        loadTask = task
-        sharedKit = await task.value
     }
 
     // MARK: - Public interface
@@ -55,6 +32,7 @@ final class ASRStreamer {
     func startMic() throws {
         shouldStop = false
         acc.reset(startMs: nowMs())
+        recognizer = SFSpeechRecognizer()
         let engine = AudioEngineManager()
         let acc = self.acc
         engine.onSamples = { samples in acc.append(samples) }
@@ -68,6 +46,7 @@ final class ASRStreamer {
     func startFile(url: URL, realtime: Bool) throws {
         shouldStop = false
         acc.reset(startMs: nowMs())
+        recognizer = SFSpeechRecognizer()
         let player = FilePlayer()
         let acc = self.acc
         player.onSamples = { samples in acc.append(samples) }
@@ -79,8 +58,6 @@ final class ASRStreamer {
     }
 
     func stop() {
-        // Signal the loop to exit — does NOT cancel the task so in-flight
-        // transcription can finish and deliver its segment.
         shouldStop = true
         audioEngine?.stop()
         filePlayer?.stop()
@@ -90,37 +67,22 @@ final class ASRStreamer {
     // MARK: - Processing loop
 
     private func run() async {
-        let wk: WhisperKit
-        if let cached = Self.sharedKit {
-            wk = cached
-        } else {
-            print("[ASRStreamer] model not pre-loaded, loading now…")
-            await Self.preload()
-            guard let loaded = Self.sharedKit else {
-                print("[ASRStreamer] no model available — aborting")
-                return
-            }
-            wk = loaded
-        }
-
         print("[ASRStreamer] processing loop started")
         while !shouldStop {
-            await checkAndEmit(wk: wk)
+            await checkAndEmit()
             guard !shouldStop else { break }
-            // Sleep is interruptible by shouldStop check above; 50 ms is fine.
             try? await Task.sleep(nanoseconds: 50_000_000)
         }
 
-        // Flush any remaining audio after stop.
         let (tail, startMs) = acc.drain()
         if !tail.isEmpty {
             print("[ASRStreamer] flushing \(tail.count) samples on stop")
-            await transcribeAndEmit(tail, startMs: startMs, wk: wk)
+            await transcribeAndEmit(tail, startMs: startMs)
         }
         print("[ASRStreamer] processing loop exited")
     }
 
-    private func checkAndEmit(wk: WhisperKit) async {
+    private func checkAndEmit() async {
         let count = acc.count
         guard count > 0 else { return }
 
@@ -139,39 +101,62 @@ final class ASRStreamer {
 
         if shouldEmit {
             let (samples, startMs) = acc.drain()
-            await transcribeAndEmit(samples, startMs: startMs, wk: wk)
+            await transcribeAndEmit(samples, startMs: startMs)
         }
     }
 
-    private func transcribeAndEmit(_ samples: [Float], startMs: Int, wk: WhisperKit) async {
-        guard !samples.isEmpty else { return }
+    private func transcribeAndEmit(_ samples: [Float], startMs: Int) async {
+        guard !samples.isEmpty, let recognizer else { return }
         print("[ASRStreamer] transcribing \(samples.count) samples (\(samples.count / 16_000)s)")
-        do {
-            let results = try await wk.transcribe(audioArray: samples)
-            let text = results.map(\.text).joined(separator: " ")
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !text.isEmpty else {
-                print("[ASRStreamer] empty transcription result")
-                return
-            }
 
-            let endMs = nowMs()
-            let id = Self.nextSegmentId
-            Self.nextSegmentId += 1
-            print("[ASRStreamer] segment \(id): \(text.prefix(80))")
-
-            logger?.log("segment_end", [
-                "segment_id": id,
-                "start_ms": startMs,
-                "end_ms": endMs,
-                "text": text
-            ])
-
-            let seg = Segment(id: id, startMs: startMs, endMs: endMs, text: text, isFinal: true)
-            onSegment?(seg)
-        } catch {
-            print("[ASRStreamer] transcription error: \(error)")
+        let format = AVAudioFormat(standardFormatWithSampleRate: 16_000, channels: 1)!
+        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(samples.count)) else { return }
+        buffer.frameLength = AVAudioFrameCount(samples.count)
+        samples.withUnsafeBufferPointer { ptr in
+            buffer.floatChannelData?[0].initialize(from: ptr.baseAddress!, count: samples.count)
         }
+
+        let request = SFSpeechAudioBufferRecognitionRequest()
+        request.requiresOnDeviceRecognition = true
+        request.shouldReportPartialResults = false
+        request.append(buffer)
+        request.endAudio()
+
+        let text = await withCheckedContinuation { (continuation: CheckedContinuation<String, Never>) in
+            var done = false
+            recognizer.recognitionTask(with: request) { result, error in
+                guard !done else { return }
+                if let error {
+                    print("[ASRStreamer] recognition error: \(error)")
+                    done = true
+                    continuation.resume(returning: "")
+                } else if let result, result.isFinal {
+                    done = true
+                    continuation.resume(returning: result.bestTranscription.formattedString)
+                }
+            }
+        }
+
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            print("[ASRStreamer] empty transcription result")
+            return
+        }
+
+        let endMs = nowMs()
+        let id = Self.nextSegmentId
+        Self.nextSegmentId += 1
+        print("[ASRStreamer] segment \(id): \(trimmed.prefix(80))")
+
+        logger?.log("segment_end", [
+            "segment_id": id,
+            "start_ms": startMs,
+            "end_ms": endMs,
+            "text": trimmed
+        ])
+
+        let seg = Segment(id: id, startMs: startMs, endMs: endMs, text: trimmed, isFinal: true)
+        onSegment?(seg)
     }
 
     private func nowMs() -> Int { Int(Date().timeIntervalSince1970 * 1000) }
