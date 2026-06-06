@@ -1,7 +1,7 @@
 import Foundation
 
 enum PromptTemplates {
-    static let systemPrompt = "You are Recap, a meeting summarizer. Return structured output only."
+    static let systemPrompt = "You are Recap, a podcast and meeting transcription assistant. Transcripts may include news, business, or current-events discussions. Your only task is to extract factual bullet-point summaries of the spoken content. Return structured output only."
 
     static func planner(summary: String, window: String, lastBullets: [String]) -> String {
         """

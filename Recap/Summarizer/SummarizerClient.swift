@@ -10,6 +10,7 @@ struct BulletOutput {
 enum SummarizeResult {
     case keepListening
     case bullets([String])
+    case refused          // safety filter triggered — caller should retry sooner
 }
 
 final class SummarizerClient {
@@ -58,8 +59,9 @@ final class SummarizerClient {
             print("[SummarizerClient] \(newBullets.count) bullets: \(newBullets.first ?? "")")
             return .bullets(newBullets)
         } catch {
-            print("[SummarizerClient] error: \(error)")
-            return .keepListening
+            let isRefusal = "\(error)".contains("refusal") || "\(error)".contains("Refusal")
+            print("[SummarizerClient] \(isRefusal ? "refused" : "error"): \(error)")
+            return isRefusal ? .refused : .keepListening
         }
     }
 }

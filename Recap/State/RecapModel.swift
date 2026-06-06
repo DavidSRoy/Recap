@@ -107,6 +107,9 @@ final class RecapModel {
             switch result {
             case .keepListening:
                 break
+            case .refused:
+                // Safety filter fired — reset timer so next segment retries immediately
+                self.lastSummarizeMs = 0
             case .bullets(let newBullets):
                 self.bullets.append(contentsOf: newBullets)
             }
