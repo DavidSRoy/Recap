@@ -4,16 +4,16 @@
 Ship a macOS SwiftUI app that records or replays audio through the same pipeline, streams ASR transcripts, emits live 1–3 bullets for each 60-second window, maintains a long summary capped at 500 words, and logs ML systems metrics to JSONL for a local vs vLLM baseline.
 
 ## Hard Constraints
-- One LLM call per window. Output must be exactly `KEEP_LISTENING` or bullets.
+- One LLM call per window. Output must be structured `BulletOutput` (keepListening or bullets).
 - Swift owns audio, ASR, LLM, UI. C++ is limited to a lock-free ring buffer and a high-resolution timer, exposed via Objective-C++.
 - JSONL logging starts on Day 1 and is never disabled.
 - File playback must use the identical pipeline as live mic and preserve real-time pacing.
 - Long summary hard cap is 500 words.
-- Model stays loaded for the entire session to enable prefix KV reuse.
+- `LanguageModelSession` recreated per window call to avoid context accumulation.
 
-## Suggested Models
-- ASR: WhisperKit tiny or small streaming. Fallback: MLX Whisper tiny.en
-- LLM: MLX community 1.5B–3B instruct, 4-bit quantized. Keep context alive.
+## Models
+- ASR: WhisperKit (auto-selects tiny/small via `recommendedModels().default`)
+- LLM: Apple FoundationModels (`import FoundationModels`) — on-device, no download, macOS 26+. `@Generable` for structured bullet output.
 
 ## Repo Structure
 ```
@@ -112,11 +112,19 @@ final class WindowBuilder {
   func currentWindow(nowMs: Int) -> (text: String, tokenCount: Int)
 }
 
+// Uses Apple FoundationModels (@Generable BulletOutput for structured output)
 final class SummarizerClient {
   func warmup() async
-  func summarize(window: String, summary: String, priorBullets: [String]) async -> SummarizeResult
+  func summarize(window: String, summary: String, priorBullets: [String],
+                 segmentId: Int, logger: MetricsLogger?) async -> SummarizeResult
 }
 enum SummarizeResult { case keepListening; case bullets([String]) }
+
+@Generable
+struct BulletOutput {
+  var keepListening: Bool
+  var bullets: [String]
+}
 
 final class SummaryStore {
   private(set) var summary: String = ""
@@ -158,13 +166,14 @@ double rssMb();
 
 ## Frozen Prompts
 
-**Planner + Summarizer**
+**Planner + Summarizer** (structured via `@Generable BulletOutput`)
 ```
-System: You are Recap. Output either KEEP_LISTENING or 1–3 concise bullets. No preamble.
+System: You are Recap, a meeting summarizer. Return structured output only.
 Long summary (<=500 words): {summary}
 Recent 60s transcript: {window}
 Prior bullets: {last_5}
-Rules: Do not repeat prior bullets. If no new idea, output exactly KEEP_LISTENING.
+Rules: Set keepListening=true if no new idea beyond the summary and prior bullets.
+       Otherwise set keepListening=false and provide 1–3 concise bullets.
 ```
 
 **Summary Update**
@@ -193,9 +202,9 @@ New bullets: {bullets}
 ---
 
 ### Day 2: Window + Bullets
-**Tasks:** `WindowBuilder` evicts segments older than `now - 60000 ms`. `SummarizerClient` loads LLM once, streams tokens, logs `prefill_start`, `first_token`, `decode_end`. Implement `KEEP_LISTENING` gate. Render streamed bullets.
+**Tasks:** `WindowBuilder` evicts segments older than `now - 60000 ms`. `SummarizerClient` creates a `LanguageModelSession` per call, uses `@Generable BulletOutput` for structured output, logs `prefill_start`, `first_token`, `decode_end`. Implement `keepListening` gate. Render bullets in `BulletsView`.
 
-**Acceptance:** 3-minute file run produces ≥4 bullet batches. Each batch has matching timing events.
+**Acceptance:** 3-minute file run produces ≥4 bullet batches. Each batch has matching timing events in JSONL.
 
 ---
 
@@ -207,9 +216,9 @@ New bullets: {bullets}
 ---
 
 ### Day 4: Systems Optimizations
-**Tasks:** Ensure all audio flows through `RingBuffer`. Keep LLM context alive; split prompt into static prefix and dynamic suffix. Quantize to 4-bit. Profile with Instruments; record `prefill_ms` vs `decode_ms`.
+**Tasks:** Ensure all audio flows through `RingBuffer`. Profile `LanguageModelSession` lifecycle with Instruments; measure TTFT per window. Implement `RSSSampler` 200ms polling. Verify context window stays under 4096 tokens per call.
 
-**Acceptance:** Second-window `prefill_ms` is ≥20% lower than first. RSS is flat after minute 2.
+**Acceptance:** TTFT logged for every window. RSS is flat after minute 2.
 
 ---
 

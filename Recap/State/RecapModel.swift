@@ -12,14 +12,18 @@ final class RecapModel {
     let logger: MetricsLogger
     private let session = SessionStore()
     private var streamer: ASRStreamer?
+    private let windowBuilder = WindowBuilder()
+    private let summarizerClient = SummarizerClient()
+    private var lastSummarizeMs = 0
+    private var isSummarizing = false
 
     init() {
         logger = MetricsLogger(sessionId: session.sessionId)
-        // Pre-load WhisperKit so it's ready before the user hits Start.
         Task { [weak self] in
             await ASRStreamer.preload { @MainActor [weak self] msg in
                 self?.status = msg
             }
+            await self?.summarizerClient.warmup()
         }
     }
 
@@ -28,6 +32,7 @@ final class RecapModel {
             print("[RecapModel] model not ready yet: \(status)")
             return
         }
+        bullets = []
         let s = makeStreamer()
         do {
             try s.startMic()
@@ -44,6 +49,7 @@ final class RecapModel {
             print("[RecapModel] model not ready yet: \(status)")
             return
         }
+        bullets = []
         let s = makeStreamer()
         do {
             try s.startFile(url: url, realtime: realtime)
@@ -60,13 +66,52 @@ final class RecapModel {
         streamer = nil
         isRunning = false
         status = "Ready"
+        lastSummarizeMs = 0
+        isSummarizing = false
     }
 
     private func makeStreamer() -> ASRStreamer {
         let s = ASRStreamer()
         s.logger = logger
-        s.onSegment = { [weak self] seg in self?.segments.append(seg) }
+        s.onSegment = { [weak self] seg in
+            guard let self else { return }
+            self.segments.append(seg)
+            self.windowBuilder.add(seg)
+            self.maybeSummarize(segmentId: seg.id)
+        }
         streamer = s
         return s
+    }
+
+    private func maybeSummarize(segmentId: Int) {
+        guard !isSummarizing else { return }
+        let nowMs = Int(Date().timeIntervalSince1970 * 1000)
+        guard nowMs - lastSummarizeMs >= 30_000 else { return }
+        let (text, wordCount) = windowBuilder.currentWindow(nowMs: nowMs)
+        guard wordCount >= 20 else { return }
+
+        lastSummarizeMs = nowMs
+        isSummarizing = true
+
+        let currentSummary = summary
+        let priorBullets = Array(bullets.suffix(5))
+
+        Task { [weak self] in
+            guard let self else { return }
+            let result = await self.summarizerClient.summarize(
+                window: text,
+                summary: currentSummary,
+                priorBullets: priorBullets,
+                segmentId: segmentId,
+                logger: self.logger
+            )
+            switch result {
+            case .keepListening:
+                break
+            case .bullets(let newBullets):
+                self.bullets = newBullets
+            }
+            self.isSummarizing = false
+        }
     }
 }

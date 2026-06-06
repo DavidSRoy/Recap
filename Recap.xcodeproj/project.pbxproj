@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0003 /* WhisperKit */; };
-		AA9900011FD00001AABB0007 /* MLX in Frameworks */ = {isa = PBXBuildFile; productRef = AA9900011FD00001AABB0004 /* MLX */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +57,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA9900011FD00001AABB0006 /* WhisperKit in Frameworks */,
-				AA9900011FD00001AABB0007 /* MLX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,7 +118,6 @@
 			name = Recap;
 			packageProductDependencies = (
 				AA9900011FD00001AABB0003 /* WhisperKit */,
-				AA9900011FD00001AABB0004 /* MLX */,
 			);
 			productName = Recap;
 			productReference = 029788EA2FD46FEF00AC29A4 /* Recap.app */;
@@ -206,7 +203,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */,
-				AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 029788EB2FD46FEF00AC29A4 /* Products */;
@@ -600,14 +596,6 @@
 				minimumVersion = 0.5.0;
 			};
 		};
-		AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/ml-explore/mlx-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.10.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -615,11 +603,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA9900011FD00001AABB0001 /* XCRemoteSwiftPackageReference "WhisperKit" */;
 			productName = WhisperKit;
-		};
-		AA9900011FD00001AABB0004 /* MLX */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AA9900011FD00001AABB0002 /* XCRemoteSwiftPackageReference "mlx-swift" */;
-			productName = MLX;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
