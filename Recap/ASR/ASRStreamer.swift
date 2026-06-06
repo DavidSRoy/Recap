@@ -7,7 +7,7 @@ final class ASRStreamer {
     var logger: MetricsLogger?
 
     private let acc = AudioSampleAccumulator()
-    private var segmentId = 0
+    private static var nextSegmentId = 0
     private var processingTask: Task<Void, Never>?
     private var audioEngine: AudioEngineManager?
     private var filePlayer: FilePlayer?
@@ -156,8 +156,8 @@ final class ASRStreamer {
             }
 
             let endMs = nowMs()
-            let id = segmentId
-            segmentId += 1
+            let id = Self.nextSegmentId
+            Self.nextSegmentId += 1
             print("[ASRStreamer] segment \(id): \(text.prefix(80))")
 
             logger?.log("segment_end", [
