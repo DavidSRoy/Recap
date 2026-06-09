@@ -14,11 +14,15 @@ final class RecapModel {
     private var streamer: ASRStreamer?
     private let windowBuilder = WindowBuilder()
     private let summarizerClient = SummarizerClient()
+    private let deduplicator = Deduplicator()
+    private let summaryStore = SummaryStore()
+    private let rssSampler: RSSSampler
     private var lastSummarizeMs = 0
     private var isSummarizing = false
 
     init() {
         logger = MetricsLogger(sessionId: session.sessionId)
+        rssSampler = RSSSampler(logger: logger)
         Task { [weak self] in
             await ASRStreamer.requestAuthorization()
             await self?.summarizerClient.warmup()
@@ -31,12 +35,13 @@ final class RecapModel {
             print("[RecapModel] not ready: \(status)")
             return
         }
-        bullets = []
+        resetForRun()
         let s = makeStreamer()
         do {
             try s.startMic()
             isRunning = true
             status = "Listening…"
+            rssSampler.start()
         } catch {
             status = "Mic error: \(error)"
             print("[RecapModel] mic error: \(error)")
@@ -48,12 +53,13 @@ final class RecapModel {
             print("[RecapModel] not ready: \(status)")
             return
         }
-        bullets = []
+        resetForRun()
         let s = makeStreamer()
         do {
             try s.startFile(url: url, realtime: realtime)
             isRunning = true
             status = "Playing file…"
+            rssSampler.start()
         } catch {
             status = "File error: \(error)"
             print("[RecapModel] file error: \(error)")
@@ -63,10 +69,18 @@ final class RecapModel {
     func stop() {
         streamer?.stop()
         streamer = nil
+        rssSampler.stop()
+        session.save(segments: segments, bullets: bullets, summary: summary)
         isRunning = false
         status = "Ready"
         lastSummarizeMs = 0
         isSummarizing = false
+    }
+
+    private func resetForRun() {
+        bullets = []
+        summary = ""
+        deduplicator.reset()
     }
 
     private func makeStreamer() -> ASRStreamer {
@@ -111,7 +125,24 @@ final class RecapModel {
                 // Safety filter fired — reset timer so next segment retries immediately
                 self.lastSummarizeMs = 0
             case .bullets(let newBullets):
-                self.bullets.append(contentsOf: newBullets)
+                let kept = newBullets.filter { !self.deduplicator.isDuplicate($0) }
+                kept.forEach { self.deduplicator.record($0) }
+                if !kept.isEmpty {
+                    self.bullets.append(contentsOf: kept)
+                    let updated = await self.summaryStore.update(
+                        currentSummary: self.summary,
+                        newBullets: kept
+                    )
+                    self.summary = updated
+                }
+                let dropped = newBullets.count - kept.count
+                if dropped > 0 {
+                    self.logger.log("dedup_dropped", [
+                        "segment_id": segmentId,
+                        "dropped": dropped,
+                        "kept": kept.count
+                    ])
+                }
             }
             self.isSummarizing = false
         }
