@@ -87,10 +87,12 @@ final class RecapModel {
         let s = ASRStreamer()
         s.logger = logger
         s.onSegment = { [weak self] seg in
-            guard let self else { return }
-            self.segments.append(seg)
-            self.windowBuilder.add(seg)
-            self.maybeSummarize(segmentId: seg.id)
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.segments.append(seg)
+                self.windowBuilder.add(seg)
+                self.maybeSummarize(segmentId: seg.id)
+            }
         }
         streamer = s
         return s
@@ -120,21 +122,16 @@ final class RecapModel {
             )
             switch result {
             case .keepListening:
-                break
+                await MainActor.run { self.isSummarizing = false }
             case .refused:
                 // Safety filter fired — reset timer so next segment retries immediately
-                self.lastSummarizeMs = 0
+                await MainActor.run {
+                    self.lastSummarizeMs = 0
+                    self.isSummarizing = false
+                }
             case .bullets(let newBullets):
                 let kept = newBullets.filter { !self.deduplicator.isDuplicate($0) }
                 kept.forEach { self.deduplicator.record($0) }
-                if !kept.isEmpty {
-                    self.bullets.append(contentsOf: kept)
-                    let updated = await self.summaryStore.update(
-                        currentSummary: self.summary,
-                        newBullets: kept
-                    )
-                    self.summary = updated
-                }
                 let dropped = newBullets.count - kept.count
                 if dropped > 0 {
                     self.logger.log("dedup_dropped", [
@@ -143,8 +140,24 @@ final class RecapModel {
                         "kept": kept.count
                     ])
                 }
+                if kept.isEmpty {
+                    await MainActor.run { self.isSummarizing = false }
+                    return
+                }
+                await MainActor.run {
+                    self.bullets.append(contentsOf: kept)
+                    self.status = "Updating summary…"
+                }
+                let updated = await self.summaryStore.update(
+                    currentSummary: currentSummary,
+                    newBullets: kept
+                )
+                await MainActor.run {
+                    self.summary = updated
+                    self.status = self.isRunning ? "Listening…" : "Ready"
+                    self.isSummarizing = false
+                }
             }
-            self.isSummarizing = false
         }
     }
 }

@@ -14,9 +14,12 @@ enum PromptTemplates {
 
     static func summaryUpdate(summary: String, bullets: [String]) -> String {
         """
-        Update the session summary to at most 500 words. Preserve decisions, action items, and open questions. Remove redundancy.
-        Current summary: \(summary)
-        New bullets: \(bullets.map { "- \($0)" }.joined(separator: "\n"))
+        Write a concise flowing prose summary of the conversation so far. Integrate the new bullets into the existing summary, removing redundancy. Keep it under 500 words.
+        Do NOT use Markdown headers, bold, bullet points, or section labels. Do NOT include placeholders like "[Insert Date]" or "[Insert Name]". Do NOT invent participants, agendas, locations, or times that were not actually mentioned. If only a small amount of content exists, write only a short paragraph — do not pad with structure.
+        Current summary: \(summary.isEmpty ? "(none yet)" : summary)
+        New bullets:
+        \(bullets.map { "- \($0)" }.joined(separator: "\n"))
+        Updated summary (plain prose only):
         """
     }
 }
