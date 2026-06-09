@@ -26,8 +26,26 @@ size_t RingBuffer::pop(float* out, size_t maxFrames) {
     return n;
 }
 
+size_t RingBuffer::peekTail(float* out, size_t maxFrames) const {
+    const size_t tail = tail_.load(std::memory_order_acquire);
+    const size_t head = head_.load(std::memory_order_acquire);
+    const size_t avail = (head - tail + capacity_) % capacity_;
+    const size_t n = std::min(maxFrames, avail);
+    const size_t start = (head - n + capacity_) % capacity_;
+    for (size_t i = 0; i < n; ++i)
+        out[i] = buffer_[(start + i) % capacity_];
+    return n;
+}
+
 size_t RingBuffer::size() const {
     const size_t head = head_.load(std::memory_order_acquire);
     const size_t tail = tail_.load(std::memory_order_acquire);
     return (head - tail + capacity_) % capacity_;
+}
+
+void RingBuffer::clear() {
+    // Reset both indices. Safe only when no concurrent push/pop is in flight
+    // — callers must call this between sessions, not during a hot loop.
+    head_.store(0, std::memory_order_release);
+    tail_.store(0, std::memory_order_release);
 }

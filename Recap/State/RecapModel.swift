@@ -16,13 +16,16 @@ final class RecapModel {
     private let summarizerClient = SummarizerClient()
     private let deduplicator = Deduplicator()
     private let summaryStore = SummaryStore()
+    private let bridge: EngineBridge
     private let rssSampler: RSSSampler
     private var lastSummarizeMs = 0
     private var isSummarizing = false
 
     init() {
         logger = MetricsLogger(sessionId: session.sessionId)
-        rssSampler = RSSSampler(logger: logger)
+        // 20 s of 16 kHz mono headroom for the ring buffer.
+        bridge = EngineBridge(capacity: 320_000)
+        rssSampler = RSSSampler(logger: logger, bridge: bridge)
         Task { [weak self] in
             await ASRStreamer.requestAuthorization()
             await self?.summarizerClient.warmup()
@@ -84,7 +87,7 @@ final class RecapModel {
     }
 
     private func makeStreamer() -> ASRStreamer {
-        let s = ASRStreamer()
+        let s = ASRStreamer(bridge: bridge)
         s.logger = logger
         s.onSegment = { [weak self] seg in
             Task { @MainActor [weak self] in

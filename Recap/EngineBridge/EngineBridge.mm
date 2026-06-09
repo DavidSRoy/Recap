@@ -22,6 +22,18 @@
     return _ring->pop(out, max);
 }
 
+- (NSUInteger)peekTail:(float *)out maxCount:(NSUInteger)max {
+    return _ring->peekTail(out, max);
+}
+
+- (NSUInteger)frameCount {
+    return _ring->size();
+}
+
+- (void)clear {
+    _ring->clear();
+}
+
 - (uint64_t)nowNs {
     return nowNs();
 }
