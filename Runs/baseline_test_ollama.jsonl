@@ -1,0 +1,9 @@
+{"ts": "2026-06-10T03:50:25.766Z", "event": "prefill_start", "segment_id": 0}
+{"ts": "2026-06-10T03:50:26.527Z", "event": "first_token", "segment_id": 0}
+{"ts": "2026-06-10T03:50:28.181Z", "event": "decode_end", "segment_id": 0, "tokens_in": 95, "tokens_out": 3}
+{"ts": "2026-06-10T03:50:28.182Z", "event": "prefill_start", "segment_id": 1}
+{"ts": "2026-06-10T03:50:28.743Z", "event": "first_token", "segment_id": 1}
+{"ts": "2026-06-10T03:50:31.005Z", "event": "decode_end", "segment_id": 1, "tokens_in": 133, "tokens_out": 3}
+{"ts": "2026-06-10T03:50:31.006Z", "event": "prefill_start", "segment_id": 2}
+{"ts": "2026-06-10T03:50:31.485Z", "event": "first_token", "segment_id": 2}
+{"ts": "2026-06-10T03:50:32.903Z", "event": "decode_end", "segment_id": 2, "tokens_in": 120, "tokens_out": 2}

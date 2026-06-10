@@ -99,11 +99,18 @@ async def generate(
 
     tokens_in = len(prompt.split())
 
-    # Schema-constrained generation — Ollama and vLLM use different param names.
+    # Schema-constrained generation.
+    # Ollama (OpenAI-compatible endpoint): response_format with json_schema type.
+    # vLLM: guided_json in extra_body.
     if backend == "ollama":
-        extra = {"format": BULLET_SCHEMA}
+        schema_kwargs = {
+            "response_format": {
+                "type": "json_schema",
+                "json_schema": {"name": "BulletOutput", "schema": BULLET_SCHEMA},
+            }
+        }
     else:
-        extra = {"guided_json": BULLET_SCHEMA}
+        schema_kwargs = {"extra_body": {"guided_json": BULLET_SCHEMA}}
 
     t0_perf = time.perf_counter()
     t0_ms   = now_ms()
@@ -116,7 +123,7 @@ async def generate(
         ],
         stream=True,
         temperature=0,
-        extra_body=extra,
+        **schema_kwargs,
     )
 
     first_perf: Optional[float] = None
