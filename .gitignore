@@ -1,0 +1,17 @@
+# Xcode
+*.xcuserstate
+xcuserdata/
+DerivedData/
+*.xcscmblueprint
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Runtime output — commit specific files intentionally, not the whole directory
+Runs/*.jsonl
+
+# macOS
+.DS_Store
