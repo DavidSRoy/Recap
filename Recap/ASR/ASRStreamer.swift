@@ -21,15 +21,18 @@ final class ASRStreamer {
     private let drainScratch: UnsafeMutablePointer<Float>
     private let peekScratch: UnsafeMutablePointer<Float>
 
-    // 8 s max, 700 ms silence threshold at 16 kHz
-    private let maxSamples = 128_000
-    private let silenceSamples = 11_200
-    private let silenceRMS: Float = 0.015
+    // 8 s max chunk; require ≥2 s buffered AND ≥1.5 s of trailing silence before chunking.
+    // Tight earlier thresholds were chopping podcast audio into 0.7 s blobs that
+    // SFSpeechRecognizer couldn't transcribe coherently.
+    private let maxSamples = 128_000        // 8 s
+    private let minEmitSamples = 32_000     // 2 s — don't emit shorter than this on silence
+    private let silenceSamples = 24_000     // 1.5 s — trailing-silence window
+    private let silenceRMS: Float = 0.01
 
     init(bridge: EngineBridge) {
         self.bridge = bridge
         self.drainScratch = UnsafeMutablePointer<Float>.allocate(capacity: maxFrames)
-        self.peekScratch = UnsafeMutablePointer<Float>.allocate(capacity: 11_200)
+        self.peekScratch = UnsafeMutablePointer<Float>.allocate(capacity: 24_000)
     }
 
     deinit {
@@ -128,7 +131,7 @@ final class ASRStreamer {
         let shouldEmit: Bool
         if count >= maxSamples {
             shouldEmit = true
-        } else if count >= silenceSamples {
+        } else if count >= minEmitSamples {
             let copied = Int(bridge.peekTail(peekScratch, maxCount: UInt(silenceSamples)))
             guard copied > 0 else { return }
             var sumSq: Float = 0

@@ -9,6 +9,13 @@ final class RecapModel {
     var isRunning = false
     var status = "Starting…"
 
+    // Live metrics for the overlay.
+    var lastTTFTMs: Int?
+    var lastTotalMs: Int?
+    var lastTokensIn: Int?
+    var lastTokensOut: Int?
+    var currentRssMb: Double?
+
     let logger: MetricsLogger
     private let session = SessionStore()
     private var streamer: ASRStreamer?
@@ -20,6 +27,8 @@ final class RecapModel {
     private let rssSampler: RSSSampler
     private var lastSummarizeMs = 0
     private var isSummarizing = false
+    private var lastPrefillStartMs: [Int: Int] = [:]
+    private var lastFirstTokenMs: [Int: Int] = [:]
 
     init() {
         logger = MetricsLogger(sessionId: session.sessionId)
@@ -30,6 +39,35 @@ final class RecapModel {
             await ASRStreamer.requestAuthorization()
             await self?.summarizerClient.warmup()
             self?.status = "Ready"
+        }
+        logger.onEvent = { [weak self] event, payload in
+            self?.handleMetricEvent(event, payload: payload)
+        }
+    }
+
+    @MainActor
+    private func handleMetricEvent(_ event: String, payload: [String: Any]) {
+        let now = Int(Date().timeIntervalSince1970 * 1000)
+        switch event {
+        case "rss_sample":
+            if let rss = payload["rss_mb"] as? Double { currentRssMb = rss }
+        case "prefill_start":
+            if let sid = payload["segment_id"] as? Int { lastPrefillStartMs[sid] = now }
+        case "first_token":
+            if let sid = payload["segment_id"] as? Int, let start = lastPrefillStartMs[sid] {
+                lastTTFTMs = now - start
+                lastFirstTokenMs[sid] = now
+            }
+        case "decode_end":
+            if let sid = payload["segment_id"] as? Int, let start = lastPrefillStartMs[sid] {
+                lastTotalMs = now - start
+                lastPrefillStartMs[sid] = nil
+                lastFirstTokenMs[sid] = nil
+            }
+            if let tin = payload["tokens_in"] as? Int { lastTokensIn = tin }
+            if let tout = payload["tokens_out"] as? Int { lastTokensOut = tout }
+        default:
+            break
         }
     }
 
@@ -84,6 +122,7 @@ final class RecapModel {
         bullets = []
         summary = ""
         deduplicator.reset()
+        Task { await summaryStore.reset() }
     }
 
     private func makeStreamer() -> ASRStreamer {
@@ -111,14 +150,13 @@ final class RecapModel {
         lastSummarizeMs = nowMs
         isSummarizing = true
 
-        let currentSummary = summary
         let priorBullets = Array(bullets.suffix(5))
 
         Task { [weak self] in
             guard let self else { return }
             let result = await self.summarizerClient.summarize(
                 window: text,
-                summary: currentSummary,
+                summary: await self.summaryStore.current,
                 priorBullets: priorBullets,
                 segmentId: segmentId,
                 logger: self.logger
@@ -132,7 +170,7 @@ final class RecapModel {
                     self.lastSummarizeMs = 0
                     self.isSummarizing = false
                 }
-            case .bullets(let newBullets):
+            case .bullets(let newBullets, _, _):
                 let kept = newBullets.filter { !self.deduplicator.isDuplicate($0) }
                 kept.forEach { self.deduplicator.record($0) }
                 let dropped = newBullets.count - kept.count
@@ -147,18 +185,17 @@ final class RecapModel {
                     await MainActor.run { self.isSummarizing = false }
                     return
                 }
+                // Unlock immediately — summary update runs in parallel via actor serialization.
                 await MainActor.run {
                     self.bullets.append(contentsOf: kept)
-                    self.status = "Updating summary…"
-                }
-                let updated = await self.summaryStore.update(
-                    currentSummary: currentSummary,
-                    newBullets: kept
-                )
-                await MainActor.run {
-                    self.summary = updated
                     self.status = self.isRunning ? "Listening…" : "Ready"
                     self.isSummarizing = false
+                }
+                Task { [weak self] in
+                    guard let self else { return }
+                    await self.summaryStore.update(newBullets: kept, logger: self.logger)
+                    let updated = await self.summaryStore.current
+                    await MainActor.run { self.summary = updated }
                 }
             }
         }

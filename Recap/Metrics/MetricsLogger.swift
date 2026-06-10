@@ -4,6 +4,9 @@ final class MetricsLogger: @unchecked Sendable {
     private let fileHandle: FileHandle
     private let queue = DispatchQueue(label: "recap.metrics", qos: .utility)
 
+    // Optional live observer — receives every event on the main actor.
+    var onEvent: (@MainActor (String, [String: Any]) -> Void)?
+
     init(sessionId: String) {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
         let runsDir = appSupport.appendingPathComponent("Recap/Runs")
@@ -26,6 +29,9 @@ final class MetricsLogger: @unchecked Sendable {
                   let line = String(data: data, encoding: .utf8)
             else { return }
             fileHandle.write(Data((line + "\n").utf8))
+        }
+        if let onEvent {
+            Task { @MainActor in onEvent(event, payload) }
         }
     }
 

@@ -1,33 +1,45 @@
 import Foundation
 import FoundationModels
 
-final class SummaryStore {
+actor SummaryStore {
+    private(set) var current: String = ""
     private let maxWords = 500
 
-    func update(currentSummary: String, newBullets: [String]) async -> String {
-        guard !newBullets.isEmpty else { return currentSummary }
+    func reset() { current = "" }
+
+    // Integrates newBullets into the running summary. Actor serializes concurrent callers
+    // so back-to-back window cycles never race on the underlying text.
+    func update(newBullets: [String], logger: MetricsLogger?) async {
+        guard !newBullets.isEmpty else { return }
         guard case .available = SystemLanguageModel.default.availability else {
-            return enforceWordCap(fallback(currentSummary, newBullets))
+            current = enforceWordCap(fallback(current, newBullets))
+            logUpdate(logger)
+            return
         }
 
         let session = LanguageModelSession(instructions: PromptTemplates.systemPrompt)
-        let prompt = PromptTemplates.summaryUpdate(summary: currentSummary, bullets: newBullets)
+        let prompt = PromptTemplates.summaryUpdate(summary: current, bullets: newBullets)
 
         do {
             let response = try await session.respond(to: prompt)
             let updated = response.content.trimmingCharacters(in: .whitespacesAndNewlines)
-            print("[SummaryStore] updated summary (\(updated.split(separator: " ").count) words)")
-            return enforceWordCap(updated)
+            current = enforceWordCap(updated)
         } catch {
             print("[SummaryStore] error: \(error) — falling back to append")
-            return enforceWordCap(fallback(currentSummary, newBullets))
+            current = enforceWordCap(fallback(current, newBullets))
         }
+        logUpdate(logger)
+    }
+
+    private func logUpdate(_ logger: MetricsLogger?) {
+        let words = current.split(separator: " ").count
+        logger?.log("summary_update", ["words": words])
+        print("[SummaryStore] updated summary (\(words) words)")
     }
 
     private func fallback(_ current: String, _ bullets: [String]) -> String {
         let appended = bullets.joined(separator: ". ")
-        if current.isEmpty { return appended }
-        return current + " " + appended
+        return current.isEmpty ? appended : current + " " + appended
     }
 
     private func enforceWordCap(_ text: String) -> String {

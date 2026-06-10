@@ -14,12 +14,16 @@ enum PromptTemplates {
 
     static func summaryUpdate(summary: String, bullets: [String]) -> String {
         """
-        Write a concise flowing prose summary of the conversation so far. Integrate the new bullets into the existing summary, removing redundancy. Keep it under 500 words.
-        Do NOT use Markdown headers, bold, bullet points, or section labels. Do NOT include placeholders like "[Insert Date]" or "[Insert Name]". Do NOT invent participants, agendas, locations, or times that were not actually mentioned. If only a small amount of content exists, write only a short paragraph — do not pad with structure.
+        Write a third-person prose summary describing what the speaker is discussing. Use only facts that appear in the bullets and the current summary — do NOT add background, audience, domain knowledge, motivations, or product features that are not explicitly stated. If a detail is not in the bullets, leave it out.
+
+        Style: plain prose, third-person ("The speaker describes…"), no Markdown headers, no bold, no bullet points, no section labels, no placeholders like "[Insert Date]". Keep it under 500 words and as short as the content allows — if there is little content, write one or two sentences only. Never invent participants, agendas, locations, dates, or features.
+
         Current summary: \(summary.isEmpty ? "(none yet)" : summary)
-        New bullets:
+
+        New bullets to integrate:
         \(bullets.map { "- \($0)" }.joined(separator: "\n"))
-        Updated summary (plain prose only):
+
+        Updated summary (plain prose, third-person, facts only):
         """
     }
 }
