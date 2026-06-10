@@ -7,38 +7,37 @@ final class ASRStreamer {
     var logger: MetricsLogger?
 
     private let bridge: EngineBridge
-    private let maxFrames = 128_000        // 8 s buffer cap matches maxSamples
     private static var nextSegmentId = 0
+    private static let segmentIdLock = NSLock()
     private var processingTask: Task<Void, Never>?
     private var audioEngine: AudioEngineManager?
     private var filePlayer: FilePlayer?
     private var shouldStop = false
     private var recognizer: SFSpeechRecognizer?
+    private var currentRequest: SFSpeechAudioBufferRecognitionRequest?
+    private var currentTask: SFSpeechRecognitionTask?
+
+    private let audioFormat = AVAudioFormat(standardFormatWithSampleRate: 16_000, channels: 1)!
+
+    // Feed audio to the recognizer in 250 ms chunks so it always has fresh frames.
+    private let feedFrameChunk = 4_000
+    // Detect a "segment boundary" when two consecutive recognized words have at least this much pause between them.
+    private let pauseThresholdSeconds: TimeInterval = 0.7
+
+    // Mutated under stateLock.
+    private let stateLock = NSLock()
+    private var lastEmittedWordIndex = 0
     private var segStartMs = 0
-    private let segStartLock = NSLock()
+    private var recognizerSessionStartMs = 0
 
-    // Pre-allocated drain/peek scratch buffers — avoid hot-path allocation.
     private let drainScratch: UnsafeMutablePointer<Float>
-    private let peekScratch: UnsafeMutablePointer<Float>
-
-    // 8 s max chunk; require ≥2 s buffered AND ≥1.5 s of trailing silence before chunking.
-    // Tight earlier thresholds were chopping podcast audio into 0.7 s blobs that
-    // SFSpeechRecognizer couldn't transcribe coherently.
-    private let maxSamples = 128_000        // 8 s
-    private let minEmitSamples = 32_000     // 2 s — don't emit shorter than this on silence
-    private let silenceSamples = 24_000     // 1.5 s — trailing-silence window
-    private let silenceRMS: Float = 0.01
 
     init(bridge: EngineBridge) {
         self.bridge = bridge
-        self.drainScratch = UnsafeMutablePointer<Float>.allocate(capacity: maxFrames)
-        self.peekScratch = UnsafeMutablePointer<Float>.allocate(capacity: 24_000)
+        self.drainScratch = UnsafeMutablePointer<Float>.allocate(capacity: feedFrameChunk)
     }
 
-    deinit {
-        drainScratch.deallocate()
-        peekScratch.deallocate()
-    }
+    deinit { drainScratch.deallocate() }
 
     // MARK: - Authorization
 
@@ -51,9 +50,7 @@ final class ASRStreamer {
     // MARK: - Public interface
 
     func startMic() throws {
-        shouldStop = false
-        resetBuffer()
-        recognizer = SFSpeechRecognizer()
+        try prepareForStart()
         let engine = AudioEngineManager()
         let bridge = self.bridge
         engine.onSamples = { samples in
@@ -69,9 +66,7 @@ final class ASRStreamer {
     }
 
     func startFile(url: URL, realtime: Bool) throws {
-        shouldStop = false
-        resetBuffer()
-        recognizer = SFSpeechRecognizer()
+        try prepareForStart()
         let player = FilePlayer()
         let bridge = self.bridge
         player.onSamples = { samples in
@@ -93,124 +88,159 @@ final class ASRStreamer {
         print("[ASRStreamer] stop requested")
     }
 
-    // MARK: - Processing loop
+    // MARK: - Lifecycle
 
-    private func resetBuffer() {
+    private func prepareForStart() throws {
+        shouldStop = false
         bridge.clear()
-        setSegStartMs(nowMs())
+        recognizer = SFSpeechRecognizer()
+        let now = nowMs()
+        stateLock.withLock {
+            segStartMs = now
+            recognizerSessionStartMs = now
+            lastEmittedWordIndex = 0
+        }
+        try startRecognitionRequest()
     }
 
-    private func setSegStartMs(_ value: Int) {
-        segStartLock.withLock { segStartMs = value }
-    }
+    private func startRecognitionRequest() throws {
+        guard let recognizer else { return }
+        let req = SFSpeechAudioBufferRecognitionRequest()
+        req.requiresOnDeviceRecognition = true
+        req.shouldReportPartialResults = true
+        if #available(macOS 13.0, *) { req.addsPunctuation = true }
 
-    private func readSegStartMs() -> Int {
-        segStartLock.withLock { segStartMs }
+        let task = recognizer.recognitionTask(with: req) { [weak self] result, error in
+            self?.handleRecognitionUpdate(result: result, error: error)
+        }
+        currentRequest = req
+        currentTask = task
+        print("[ASRStreamer] recognition request started")
     }
 
     private func run() async {
         print("[ASRStreamer] processing loop started")
         while !shouldStop {
-            await checkAndEmit()
+            feedAudioIfAvailable()
             guard !shouldStop else { break }
             try? await Task.sleep(nanoseconds: 50_000_000)
         }
-
-        let (tail, startMs) = drain()
-        if !tail.isEmpty {
-            print("[ASRStreamer] flushing \(tail.count) samples on stop")
-            await transcribeAndEmit(tail, startMs: startMs)
-        }
+        // Drain any remaining audio after stop.
+        feedAudioIfAvailable(drain: true)
+        currentRequest?.endAudio()
+        // Give the recognizer ~250 ms to finalise the tail.
+        try? await Task.sleep(nanoseconds: 250_000_000)
+        currentRequest = nil
+        currentTask = nil
         print("[ASRStreamer] processing loop exited")
     }
 
-    private func checkAndEmit() async {
-        let count = Int(bridge.frameCount())
-        guard count > 0 else { return }
-
-        let shouldEmit: Bool
-        if count >= maxSamples {
-            shouldEmit = true
-        } else if count >= minEmitSamples {
-            let copied = Int(bridge.peekTail(peekScratch, maxCount: UInt(silenceSamples)))
+    private func feedAudioIfAvailable(drain: Bool = false) {
+        guard let req = currentRequest else { return }
+        while true {
+            let count = Int(bridge.frameCount())
+            if count == 0 { return }
+            if !drain && count < feedFrameChunk { return }
+            let toRead = min(count, feedFrameChunk)
+            let copied = Int(bridge.popPCM(drainScratch, maxCount: UInt(toRead)))
             guard copied > 0 else { return }
-            var sumSq: Float = 0
-            for i in 0..<copied {
-                let s = peekScratch[i]
-                sumSq += s * s
-            }
-            let rms = sqrt(sumSq / Float(copied))
-            shouldEmit = rms < silenceRMS
-        } else {
-            shouldEmit = false
-        }
-
-        if shouldEmit {
-            let (samples, startMs) = drain()
-            await transcribeAndEmit(samples, startMs: startMs)
+            guard let buffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: AVAudioFrameCount(copied)) else { return }
+            buffer.frameLength = AVAudioFrameCount(copied)
+            buffer.floatChannelData?[0].initialize(from: drainScratch, count: copied)
+            req.append(buffer)
+            if !drain { return }
         }
     }
 
-    private func drain() -> ([Float], Int) {
-        let startMs = readSegStartMs()
-        let copied = Int(bridge.popPCM(drainScratch, maxCount: UInt(maxFrames)))
-        let samples = Array(UnsafeBufferPointer(start: drainScratch, count: copied))
-        setSegStartMs(nowMs())
-        return (samples, startMs)
-    }
+    // MARK: - Recognition callback
 
-    private func transcribeAndEmit(_ samples: [Float], startMs: Int) async {
-        guard !samples.isEmpty, let recognizer else { return }
-        print("[ASRStreamer] transcribing \(samples.count) samples (\(samples.count / 16_000)s)")
-
-        let format = AVAudioFormat(standardFormatWithSampleRate: 16_000, channels: 1)!
-        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(samples.count)) else { return }
-        buffer.frameLength = AVAudioFrameCount(samples.count)
-        samples.withUnsafeBufferPointer { ptr in
-            buffer.floatChannelData?[0].initialize(from: ptr.baseAddress!, count: samples.count)
-        }
-
-        let request = SFSpeechAudioBufferRecognitionRequest()
-        request.requiresOnDeviceRecognition = true
-        request.shouldReportPartialResults = false
-        request.append(buffer)
-        request.endAudio()
-
-        let text = await withCheckedContinuation { (continuation: CheckedContinuation<String, Never>) in
-            var done = false
-            recognizer.recognitionTask(with: request) { result, error in
-                guard !done else { return }
-                if let error {
-                    print("[ASRStreamer] recognition error: \(error)")
-                    done = true
-                    continuation.resume(returning: "")
-                } else if let result, result.isFinal {
-                    done = true
-                    continuation.resume(returning: result.bestTranscription.formattedString)
-                }
+    private func handleRecognitionUpdate(result: SFSpeechRecognitionResult?, error: Error?) {
+        if let error {
+            let ns = error as NSError
+            // Code 1110 = "No speech detected" — common during silence, not noteworthy.
+            if !(ns.domain == "kAFAssistantErrorDomain" && ns.code == 1110) {
+                print("[ASRStreamer] recognition error: \(error)")
             }
-        }
-
-        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else {
-            print("[ASRStreamer] empty transcription result")
             return
         }
+        guard let result else { return }
+        let words = result.bestTranscription.segments
 
-        let endMs = nowMs()
-        let id = Self.nextSegmentId
-        Self.nextSegmentId += 1
-        print("[ASRStreamer] segment \(id): \(trimmed.prefix(80))")
+        var pendingEmits: [[SFTranscriptionSegment]] = []
+        stateLock.withLock {
+            guard !words.isEmpty else { return }
+            guard words.count >= lastEmittedWordIndex else {
+                // Recognizer reset (e.g., dropped old segments) — restart counter
+                lastEmittedWordIndex = 0
+                return
+            }
 
+            // Walk from the last emitted index, splitting on pause >= threshold.
+            var cursor = lastEmittedWordIndex
+            while cursor < words.count {
+                var cutEnd = words.count
+                if cursor < words.count - 1 {
+                    for i in cursor..<(words.count - 1) {
+                        let cur = words[i]
+                        let next = words[i + 1]
+                        let gap = next.timestamp - (cur.timestamp + cur.duration)
+                        if gap >= pauseThresholdSeconds {
+                            cutEnd = i + 1
+                            break
+                        }
+                    }
+                }
+                if cutEnd < words.count {
+                    pendingEmits.append(Array(words[cursor..<cutEnd]))
+                    cursor = cutEnd
+                } else if result.isFinal {
+                    // No more pauses found and recognizer is wrapping up — emit the tail.
+                    pendingEmits.append(Array(words[cursor..<words.count]))
+                    cursor = words.count
+                } else {
+                    break
+                }
+            }
+            lastEmittedWordIndex = cursor
+        }
+
+        for emit in pendingEmits {
+            emitSegment(words: emit)
+        }
+    }
+
+    private func emitSegment(words: [SFTranscriptionSegment]) {
+        let text = words.map { $0.substring }.joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
+
+        // Word timestamps are relative to the recognizer session start.
+        let firstWordOffsetMs = Int((words.first?.timestamp ?? 0) * 1000)
+        let lastWord = words.last!
+        let lastWordOffsetMs = Int((lastWord.timestamp + lastWord.duration) * 1000)
+        let (sessionStart, _) = stateLock.withLock { (recognizerSessionStartMs, segStartMs) }
+        let startMs = sessionStart + firstWordOffsetMs
+        let endMs = sessionStart + lastWordOffsetMs
+
+        let id = nextSegmentId()
+        print("[ASRStreamer] segment \(id): \(text.prefix(80))")
         logger?.log("segment_end", [
             "segment_id": id,
             "start_ms": startMs,
             "end_ms": endMs,
-            "text": trimmed
+            "text": text
         ])
+        onSegment?(Segment(id: id, startMs: startMs, endMs: endMs, text: text, isFinal: true))
+    }
 
-        let seg = Segment(id: id, startMs: startMs, endMs: endMs, text: trimmed, isFinal: true)
-        onSegment?(seg)
+    // MARK: - Helpers
+
+    private func nextSegmentId() -> Int {
+        Self.segmentIdLock.withLock {
+            let id = Self.nextSegmentId
+            Self.nextSegmentId += 1
+            return id
+        }
     }
 
     private func nowMs() -> Int { Int(Date().timeIntervalSince1970 * 1000) }
