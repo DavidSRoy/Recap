@@ -60,7 +60,7 @@ final class SummarizerClient {
                 }
                 // snapshot: ResponseStream<BulletOutput>.Snapshot
                 // .content gives BulletOutput.PartiallyGenerated; .bullets grows as tokens arrive.
-                lastBullets = snapshot.content.bullets
+                lastBullets = snapshot.content.bullets ?? lastBullets
             }
 
             if !firstTokenFired { firstTokenMs = nowMs() }

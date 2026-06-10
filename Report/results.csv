@@ -1,3 +1,3 @@
 run,n_windows,mean_prefill_ms,p95_prefill_ms,mean_decode_ms,p95_decode_ms,mean_tps_out,mean_tokens_in,peak_rss_mb
-FoundationModels (Neural Engine),3,320.0,320.0,890.0,890.0,2.25,116,48.8
-Ollama / vLLM,3,600.3,761.0,1778.0,2262.0,1.52,116,0.0
+FoundationModels (Neural Engine),7,755.1,906.0,651.4,972.0,5.11,177.9,136.1
+Ollama / vLLM,7,558.7,802.0,828.9,1285.0,54.62,180.9,8924.7

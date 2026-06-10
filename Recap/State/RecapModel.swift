@@ -143,7 +143,7 @@ final class RecapModel {
     private func maybeSummarize(segmentId: Int) {
         guard !isSummarizing else { return }
         let nowMs = Int(Date().timeIntervalSince1970 * 1000)
-        guard nowMs - lastSummarizeMs >= 60_000 else { return }
+        guard nowMs - lastSummarizeMs >= 10_000 else { return }
         let (text, wordCount) = windowBuilder.currentWindow(nowMs: nowMs)
         guard wordCount >= 20 else { return }
 

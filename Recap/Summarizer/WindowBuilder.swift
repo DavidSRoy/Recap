@@ -2,7 +2,7 @@ import Foundation
 
 final class WindowBuilder {
     private var segments: [Segment] = []
-    private let windowMs = 60_000
+    private let windowMs = 10_000
 
     func add(_ seg: Segment) {
         segments.append(seg)
