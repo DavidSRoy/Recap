@@ -1,0 +1,64 @@
+{"event": "prefill_start", "ts": "2026-06-10T05:04:43.665Z", "segment_id": 2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:43.690Z", "rss_mb": 8919.4}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:43.921Z", "rss_mb": 8922.5}
+{"event": "first_token", "ts": "2026-06-10T05:04:44.006Z", "segment_id": 2}
+{"event": "decode_end", "ts": "2026-06-10T05:04:44.083Z", "segment_id": 2, "tokens_in": 61, "tokens_out": 5}
+{"event": "prefill_start", "ts": "2026-06-10T05:04:44.103Z", "segment_id": 6}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:44.154Z", "rss_mb": 8922.9}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:44.388Z", "rss_mb": 8922.9}
+{"event": "first_token", "ts": "2026-06-10T05:04:44.491Z", "segment_id": 6}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:44.619Z", "rss_mb": 8922.9}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:44.860Z", "rss_mb": 8922.9}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:45.098Z", "rss_mb": 8922.9}
+{"event": "decode_end", "ts": "2026-06-10T05:04:45.260Z", "segment_id": 6, "tokens_in": 98, "tokens_out": 41}
+{"event": "prefill_start", "ts": "2026-06-10T05:04:45.280Z", "segment_id": 9}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:45.331Z", "rss_mb": 8922.9}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:45.561Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:45.793Z", "rss_mb": 8923.0}
+{"event": "first_token", "ts": "2026-06-10T05:04:45.833Z", "segment_id": 9}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:46.020Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:46.262Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:46.498Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:46.726Z", "rss_mb": 8923.0}
+{"event": "decode_end", "ts": "2026-06-10T05:04:46.911Z", "segment_id": 9, "tokens_in": 144, "tokens_out": 57}
+{"event": "prefill_start", "ts": "2026-06-10T05:04:46.930Z", "segment_id": 19}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:46.957Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:47.190Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:47.423Z", "rss_mb": 8923.0}
+{"event": "first_token", "ts": "2026-06-10T05:04:47.483Z", "segment_id": 19}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:47.649Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:47.883Z", "rss_mb": 8923.0}
+{"event": "decode_end", "ts": "2026-06-10T05:04:48.038Z", "segment_id": 19, "tokens_in": 195, "tokens_out": 30}
+{"event": "prefill_start", "ts": "2026-06-10T05:04:48.058Z", "segment_id": 21}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:48.115Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:48.348Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:48.582Z", "rss_mb": 8923.0}
+{"event": "first_token", "ts": "2026-06-10T05:04:48.776Z", "segment_id": 21}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:48.811Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:49.046Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:49.283Z", "rss_mb": 8923.0}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:49.512Z", "rss_mb": 8923.1}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:49.745Z", "rss_mb": 8923.1}
+{"event": "decode_end", "ts": "2026-06-10T05:04:49.898Z", "segment_id": 21, "tokens_in": 248, "tokens_out": 59}
+{"event": "prefill_start", "ts": "2026-06-10T05:04:49.918Z", "segment_id": 24}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:49.974Z", "rss_mb": 8923.1}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:50.201Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:50.444Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:50.675Z", "rss_mb": 8923.2}
+{"event": "first_token", "ts": "2026-06-10T05:04:50.720Z", "segment_id": 24}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:50.901Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:51.135Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:51.366Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:51.599Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:51.837Z", "rss_mb": 8923.2}
+{"event": "decode_end", "ts": "2026-06-10T05:04:52.005Z", "segment_id": 24, "tokens_in": 265, "tokens_out": 67}
+{"event": "prefill_start", "ts": "2026-06-10T05:04:52.024Z", "segment_id": 26}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:52.069Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:52.300Z", "rss_mb": 8923.2}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:52.531Z", "rss_mb": 8923.2}
+{"event": "first_token", "ts": "2026-06-10T05:04:52.580Z", "segment_id": 26}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:52.765Z", "rss_mb": 8924.7}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:52.999Z", "rss_mb": 8924.7}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:53.242Z", "rss_mb": 8924.7}
+{"event": "rss_sample", "ts": "2026-06-10T05:04:53.473Z", "rss_mb": 8924.7}
+{"event": "decode_end", "ts": "2026-06-10T05:04:53.496Z", "segment_id": 26, "tokens_in": 255, "tokens_out": 48}

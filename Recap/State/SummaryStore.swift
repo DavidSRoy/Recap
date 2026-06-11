@@ -13,12 +13,13 @@ actor SummaryStore {
         guard !newBullets.isEmpty else { return }
         guard case .available = SystemLanguageModel.default.availability else {
             current = enforceWordCap(fallback(current, newBullets))
-            logUpdate(logger)
+            logUpdate(logger, durationMs: 0, tokensIn: 0)
             return
         }
 
         let session = LanguageModelSession(instructions: PromptTemplates.systemPrompt)
         let prompt = PromptTemplates.summaryUpdate(summary: current, bullets: newBullets)
+        let startMs = nowMs()
 
         do {
             let response = try await session.respond(to: prompt)
@@ -28,14 +29,16 @@ actor SummaryStore {
             print("[SummaryStore] error: \(error) — falling back to append")
             current = enforceWordCap(fallback(current, newBullets))
         }
-        logUpdate(logger)
+        logUpdate(logger, durationMs: nowMs() - startMs, tokensIn: prompt.split(separator: " ").count)
     }
 
-    private func logUpdate(_ logger: MetricsLogger?) {
+    private func logUpdate(_ logger: MetricsLogger?, durationMs: Int, tokensIn: Int) {
         let words = current.split(separator: " ").count
-        logger?.log("summary_update", ["words": words])
-        print("[SummaryStore] updated summary (\(words) words)")
+        logger?.log("summary_update", ["words": words, "duration_ms": durationMs, "tokens_in": tokensIn])
+        print("[SummaryStore] updated summary (\(words) words, \(durationMs)ms)")
     }
+
+    private func nowMs() -> Int { Int(Date().timeIntervalSince1970 * 1000) }
 
     private func fallback(_ current: String, _ bullets: [String]) -> String {
         let appended = bullets.joined(separator: ". ")

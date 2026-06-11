@@ -35,6 +35,10 @@ final class RecapModel {
         // 20 s of 16 kHz mono headroom for the ring buffer.
         bridge = EngineBridge(capacity: 320_000)
         rssSampler = RSSSampler(logger: logger, bridge: bridge)
+        rssSampler.extraMetrics = { [weak self] in
+            guard let self else { return [:] }
+            return ["segment_count": self.segments.count, "bullet_count": self.bullets.count]
+        }
         Task { [weak self] in
             await ASRStreamer.requestAuthorization()
             await self?.summarizerClient.warmup()
@@ -140,6 +144,14 @@ final class RecapModel {
         return s
     }
 
+    // Drop bullets that echo prompt scaffolding labels or are too short to be meaningful.
+    private func isPromptEcho(_ bullet: String) -> Bool {
+        let lower = bullet.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        let echoPrefixes = ["prior bullets", "long summary", "recent transcript", "new bullets"]
+        if echoPrefixes.contains(where: { lower.hasPrefix($0) }) { return true }
+        return lower.split(separator: " ").count < 4
+    }
+
     private func maybeSummarize(segmentId: Int) {
         guard !isSummarizing else { return }
         let nowMs = Int(Date().timeIntervalSince1970 * 1000)
@@ -171,7 +183,9 @@ final class RecapModel {
                     self.isSummarizing = false
                 }
             case .bullets(let newBullets, _, _):
-                let kept = newBullets.filter { !self.deduplicator.isDuplicate($0) }
+                let kept = newBullets
+                    .filter { !self.isPromptEcho($0) }
+                    .filter { !self.deduplicator.isDuplicate($0) }
                 kept.forEach { self.deduplicator.record($0) }
                 let dropped = newBullets.count - kept.count
                 if dropped > 0 {

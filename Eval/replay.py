@@ -24,7 +24,9 @@ Usage — cloud GPU/vLLM:
 import argparse
 import asyncio
 import json
+import subprocess
 import sys
+import threading
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -48,6 +50,57 @@ BULLET_SCHEMA = {
     },
     "required": ["bullets"],
 }
+
+
+# ── RSS sampling (backend process) ───────────────────────────────────────────
+
+def _backend_pids(base_url: str) -> list[int]:
+    """Guess which process to sample based on the backend URL."""
+    name = "ollama" if "11434" in base_url else "python3"
+    try:
+        out = subprocess.check_output(["pgrep", "-x", name], text=True)
+        return [int(p) for p in out.split() if p.strip()]
+    except subprocess.CalledProcessError:
+        return []
+
+
+def _sample_rss_mb(pids: list[int]) -> float:
+    if not pids:
+        return 0.0
+    try:
+        out = subprocess.check_output(
+            ["ps", "-o", "rss=", "-p", ",".join(str(p) for p in pids)],
+            text=True, stderr=subprocess.DEVNULL,
+        )
+        return round(sum(int(x) for x in out.split() if x.strip()) / 1024, 1)
+    except Exception:
+        return 0.0
+
+
+class RssSampler:
+    def __init__(self, out_fh, base_url: str, interval_ms: int = 200):
+        self._fh = out_fh
+        self._interval = interval_ms / 1000
+        self._stop = threading.Event()
+        self._pids = _backend_pids(base_url)
+        self._thread = threading.Thread(target=self._run, daemon=True)
+
+    def start(self):
+        if self._pids:
+            print(f"  [rss] sampling PIDs {self._pids} every {int(self._interval*1000)} ms")
+        self._thread.start()
+
+    def stop(self):
+        self._stop.set()
+        self._thread.join(timeout=1)
+
+    def _run(self):
+        while not self._stop.is_set():
+            mb = _sample_rss_mb(self._pids)
+            record = {"ts": ms_to_iso(now_ms()), "event": "rss_sample", "rss_mb": mb}
+            self._fh.write(json.dumps(record) + "\n")
+            self._fh.flush()
+            self._stop.wait(self._interval)
 
 
 # ── Timing helpers ────────────────────────────────────────────────────────────
@@ -206,6 +259,9 @@ async def run(args) -> None:
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
 
     with open(args.output, "w") as out:
+        sampler = RssSampler(out, args.base_url)
+        sampler.start()
+
         for i, event in enumerate(events):
             seg_id = event.get("segment_id", i)
 
@@ -232,6 +288,17 @@ async def run(args) -> None:
 
             except Exception as exc:
                 print(f"  [{i+1:02d}/{len(events)}] seg={seg_id}  ERROR: {exc}", file=sys.stderr)
+
+        sampler.stop()
+
+    rss_vals = []
+    with open(args.output) as f:
+        for line in f:
+            e = json.loads(line)
+            if e.get("event") == "rss_sample" and "rss_mb" in e:
+                rss_vals.append(e["rss_mb"])
+    if rss_vals:
+        print(f"Peak RSS: {max(rss_vals)} MB  (mean {sum(rss_vals)/len(rss_vals):.1f} MB)")
 
     print(f"\nOutput  : {args.output}")
 
