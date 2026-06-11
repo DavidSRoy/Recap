@@ -155,7 +155,7 @@ final class RecapModel {
     private func maybeSummarize(segmentId: Int) {
         guard !isSummarizing else { return }
         let nowMs = Int(Date().timeIntervalSince1970 * 1000)
-        guard nowMs - lastSummarizeMs >= 10_000 else { return }
+        guard nowMs - lastSummarizeMs >= 20_000 else { return }
         let (text, wordCount) = windowBuilder.currentWindow(nowMs: nowMs)
         guard wordCount >= 20 else { return }
 
@@ -168,7 +168,6 @@ final class RecapModel {
             guard let self else { return }
             let result = await self.summarizerClient.summarize(
                 window: text,
-                summary: await self.summaryStore.current,
                 priorBullets: priorBullets,
                 segmentId: segmentId,
                 logger: self.logger

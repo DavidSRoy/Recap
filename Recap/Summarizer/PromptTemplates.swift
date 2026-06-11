@@ -3,12 +3,15 @@ import Foundation
 enum PromptTemplates {
     static let systemPrompt = "You are Recap, a podcast and meeting transcription assistant. Transcripts may include news, business, or current-events discussions. Your only task is to extract factual bullet-point summaries of the spoken content. Return structured output only."
 
-    static func planner(summary: String, window: String, lastBullets: [String]) -> String {
+    static func planner(window: String, lastBullets: [String]) -> String {
         """
-        Long summary: \(summary.isEmpty ? "(none yet)" : summary)
-        Recent transcript: \(window)
-        Prior bullets: \(lastBullets.isEmpty ? "(none)" : lastBullets.joined(separator: "; "))
-        Extract up to 3 concise bullet points covering new key ideas not already in the summary or prior bullets. Return empty bullets only if the transcript is noise or silence.
+        Recent transcript:
+        \(window)
+
+        Prior bullets (already covered — do NOT repeat these or paraphrases of them):
+        \(lastBullets.isEmpty ? "(none)" : lastBullets.map { "- \($0)" }.joined(separator: "\n"))
+
+        Extract up to 3 concise bullet points covering NEW key ideas from the transcript above. Use ONLY facts that appear in the transcript — do not draw on the prior bullets, domain knowledge, or invented context. Return an empty array if the transcript is noise, silence, or contains nothing not already in the prior bullets.
         """
     }
 

@@ -19,10 +19,13 @@ final class ASRStreamer {
     private var segStartMs = 0
 
     // Require ≥2 s buffered AND ≥1.5 s of trailing silence before emitting a chunk.
-    // Hard cap at 8 s regardless.
+    // Hard cap at 8 s regardless. On max-cap drains, leave a small acoustic-context
+    // overlap so the next chunk doesn't begin mid-utterance (SFSpeechRecognizer's
+    // VAD drops leading audio when a buffer starts with no onset).
     private let maxSamples   = 128_000   // 8 s at 16 kHz
     private let minEmitSamples = 32_000  // 2 s
     private let silenceSamples = 24_000  // 1.5 s
+    private let overlapSamples = 6_400   // 400 ms
     private let silenceRMS: Float = 0.01
 
     private let drainScratch: UnsafeMutablePointer<Float>
@@ -117,8 +120,10 @@ final class ASRStreamer {
         let count = Int(bridge.frameCount())
         guard count > 0 else { return }
 
+        let hitMaxCap: Bool
         let shouldEmit: Bool
         if count >= maxSamples {
+            hitMaxCap = true
             shouldEmit = true
         } else if count >= minEmitSamples {
             let copied = Int(bridge.peekTail(peekScratch, maxCount: UInt(silenceSamples)))
@@ -126,22 +131,26 @@ final class ASRStreamer {
             var sumSq: Float = 0
             for i in 0..<copied { let s = peekScratch[i]; sumSq += s * s }
             let rms = sqrt(sumSq / Float(copied))
+            hitMaxCap = false
             shouldEmit = rms < silenceRMS
         } else {
+            hitMaxCap = false
             shouldEmit = false
         }
 
         if shouldEmit {
-            let (samples, startMs) = drain()
+            let (samples, startMs) = drain(leaveOverlap: hitMaxCap)
             await transcribeAndEmit(samples, startMs: startMs)
         }
     }
 
-    private func drain() -> ([Float], Int) {
+    private func drain(leaveOverlap: Bool = false) -> ([Float], Int) {
         let startMs = stateLock.withLock { segStartMs }
-        let copied = Int(bridge.popPCM(drainScratch, maxCount: UInt(maxSamples)))
+        let maxPop = leaveOverlap ? maxSamples - overlapSamples : maxSamples
+        let copied = Int(bridge.popPCM(drainScratch, maxCount: UInt(maxPop)))
         let samples = Array(UnsafeBufferPointer(start: drainScratch, count: copied))
-        stateLock.withLock { segStartMs = nowMs() }
+        let overlapMs = leaveOverlap ? (overlapSamples * 1000 / 16_000) : 0
+        stateLock.withLock { segStartMs = nowMs() - overlapMs }
         return (samples, startMs)
     }
 

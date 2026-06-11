@@ -23,7 +23,6 @@ final class SummarizerClient {
 
     func summarize(
         window: String,
-        summary: String,
         priorBullets: [String],
         segmentId: Int,
         logger: MetricsLogger?
@@ -34,7 +33,7 @@ final class SummarizerClient {
         }
 
         let session = LanguageModelSession(instructions: PromptTemplates.systemPrompt)
-        let prompt = PromptTemplates.planner(summary: summary, window: window, lastBullets: priorBullets)
+        let prompt = PromptTemplates.planner(window: window, lastBullets: priorBullets)
 
         // Log system + prompt so vllm_client.py can replay exact inputs.
         logger?.log("prefill_start", [
