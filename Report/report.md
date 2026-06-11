@@ -4,7 +4,7 @@
 
 Recap is a macOS application that captures or replays audio, produces a rolling transcript via Apple's on-device speech recogniser, and condenses each 60-second window into 1–3 bullet points using Apple FoundationModels running on the Neural Engine. It maintains a 500-word rolling prose summary and logs per-event latency metrics to JSONL throughout the session.
 
-The core ML systems question is whether tightly-integrated, on-device inference (Apple FoundationModels on the Neural Engine) provides a latency advantage over a conventional server-side approach (Ollama serving a compatible model via HTTP). Across three summarisation windows with identical 116-token prompts, FoundationModels achieved a mean time-to-first-token of **320 ms** vs. **600 ms** for Ollama — a 1.9× reduction — and completed decoding in **890 ms** vs. **1 778 ms**, at **2.25 tokens/sec** vs. **1.52 tokens/sec**.
+Since this application runs locally, the primary bottleneck was hypothesised to be **prefill** during summarisation, where the full prompt (transcribed audio window + rolling summary + prior bullets) is used to build the initial KV cache. Memory was not expected to be a bottleneck because the application stores session context in a rolling summary of relatively fixed size — it should not grow linearly with session length. Latency was expected to scale with the number of input tokens processed. A proposed optimisation was to run the summary-update agent in parallel with the next audio window being buffered, rather than sequentially.
 
 ---
 
@@ -141,11 +141,15 @@ Both files contain identical segment IDs, prompt text, and input token counts (1
 
 ## Hypothesis validation
 
-**Hypothesis:** On-device Neural Engine inference (Apple FoundationModels) will have lower end-to-end latency than an HTTP-based server (Ollama) for the structured-output summarisation task used in Recap.
+**Hypothesis:** Since this application runs locally, the primary bottleneck will be prefill during summarisation, where the whole prompt is used to build the initial KV cache. Memory will not be a bottleneck because the application stores session context in a rolling summary of relatively fixed size — it should not grow linearly with session length. Latency will depend on the number of input tokens processed. One optimisation is to run the summary-update agent in parallel with the next audio window being buffered.
 
-**Result: Confirmed.** FoundationModels was 1.9× faster at TTFT and 2.0× faster at decoding across all measured windows. The advantage is consistent: p95 values are identical to means for the local run, indicating stable latency with no outliers, while Ollama's p95 decode (2 262 ms) is 27% above its mean (1 778 ms), suggesting periodic scheduling jitter in the HTTP server path.
+**Prefill as primary bottleneck — partially supported.** Prefill and decode both scale linearly with `tokens_in`, but decode grows 4× faster (3.62 ms/token vs 0.87 ms/token). Prefill dominates at short prompts (< ~150 tokens) but decode overtakes it as the session matures and the prompt grows. The practical implication is the same as hypothesised — reducing prompt length reduces latency — but the mechanism is broader than prefill alone.
 
-The 48.8 MB peak RSS for the on-device model includes both the app and the FoundationModels runtime. This is modest for an Apple Silicon system with 16 GB+ unified memory and RSS is flat after the first window, confirming the model stays resident and does not reload between calls.
+**Memory not a bottleneck — confirmed.** App RSS held flat at 117–136 MB across the session while segment count grew continuously. The rolling summary plateaued well below the 500-word cap. FoundationModels uses 65× less process memory than Ollama (129 MB vs 8 923 MB) because model weights are shared with the OS-level Apple Intelligence runtime rather than loaded privately.
+
+**Latency scales with input tokens — confirmed.** Both prefill and decode latency correlate with `tokens_in` (R² ≈ 0.71–0.76). Total per-window latency grew from ~937 ms at 95 tokens to ~1 878 ms at 252 tokens across the session.
+
+**Parallel summary-update optimisation — refuted at current cadence.** Summary update completed in 693–1 486 ms while the gap to the next window was 6 948–50 274 ms. The summary update is not on the critical path at a 10-second window cadence. The optimisation would only become relevant if the window cadence were reduced to ~2 seconds or less.
 
 ---
 
