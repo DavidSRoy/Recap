@@ -14,7 +14,20 @@
 | Local backend | Apple FoundationModels (Neural Engine, on-device) |
 | Baseline backend | Ollama `llama3.1:8b` via HTTP (`localhost:11434`) |
 
-**Limitation:** At 2.4 minutes this run is too short to observe steady-state memory or a full summary-cap engagement. Claims about memory plateau and `tokens_in` stabilisation are directionally supported but not conclusive. A 15-minute run is needed to confirm.
+---
+
+## Key findings
+
+**1. Total latency scales with prompt length — decode faster than prefill.**
+Prefill and decode both grow linearly with `tokens_in`, but decode grows 4× faster (3.62 ms/token vs 0.87 ms/token, R² ≈ 0.75 for both). Prefill dominates at short prompts (< ~150 tokens, 66–71% of total latency) but decode overtakes it by window 4 (192 tokens) and stays dominant. The original hypothesis frames this as a prefill bottleneck; the more accurate statement is that *any reduction in prompt length reduces total latency, with the largest gains coming from shortening decode*.
+
+**2. Memory is not a bottleneck — confirmed by this run.**
+App RSS stayed flat at 117–136 MB (mean 129 MB) across the full session while segment count grew continuously. The rolling summary plateaued at 88 words by window 3 and held there. FoundationModels uses 65× less process memory than Ollama llama3.1:8b (129 MB vs 8 923 MB), because model weights are shared with the OS-level Apple Intelligence runtime rather than loaded privately.
+
+**3. Parallel summary update provides no benefit at 10-second window cadence.**
+Summary update completed in 693–1 486 ms; the gap to the next window was 6 948–50 274 ms in every case. Not on the critical path.
+
+> **Run caveat:** 2.4 minutes is too short to confirm steady-state memory or full summary-cap engagement. Memory and `tokens_in` plateau findings are directional. A 15-minute run is needed to validate at scale.
 
 ---
 
