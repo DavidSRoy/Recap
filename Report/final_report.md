@@ -2,15 +2,28 @@
 
 ## Abstract
 
-Recap is a macOS application that transcribes audio in real time and produces a live bullet-point summary using on-device LLM inference. It targets fully private, zero-latency operation: no cloud calls, no model downloads, no third-party dependencies. Three instrumented runs (2.4 min, 13.9 min, 6.4 min) measured latency, memory, prompt size stability, and parallel-execution opportunity across Apple FoundationModels and an Ollama llama3.1:8b baseline.
+A common problem in long meetings or lectures is losing track of the current topic and the important points made earlier — and the time it takes to regain that context. Recap is a macOS application that addresses this by listening to audio in real time, transcribing it on-device, and generating a live rolling bullet-point summary of what is being discussed. It runs entirely locally using Apple's Neural Engine: no cloud calls, no model downloads, no third-party dependencies.
+
+Three instrumented runs (2.4 min, 13.9 min, 6.4 min) measured latency, memory, prompt size stability, and parallel-execution opportunity across Apple FoundationModels and an Ollama llama3.1:8b baseline. The central finding is that end-to-end inference latency (~1.5 s per window) is session-age-independent when the rolling summary is excluded from the planner prompt — a key architectural decision that collapsed the tokens\_in → latency correlation from R² ≈ 0.73 to R² ≈ 0.003.
 
 ---
 
 ## System Design
 
-### Architecture
+### Motivation
 
-The system follows an **orchestrator–subagent** pattern. A central coordinator (`RecapModel`) owns the session loop and dispatches to two specialised agents that run concurrently.
+End-to-end latency is critical for this application: the bullet points the user sees must be relevant to what is being said right now, not to what was said two minutes ago. Running locally on the Neural Engine avoids the round-trip latency of a cloud call and keeps all audio and transcripts private. The core audio pipeline is written in C++ via an Obj-C++ bridge to allow granular control over memory layout and ring-buffer behaviour — areas where Swift's overhead is less predictable.
+
+### Agentic design
+
+The system uses an **orchestrator–subagent** pattern with two specialised agents running concurrently:
+
+- **Planner agent** — given the last 25 seconds of transcript and the 5 most recent bullets, decides whether there is a new idea worth surfacing. Returns up to 3 bullet points, or signals "keep listening" if the window contains insufficient content.
+- **Summarizer agent** — given the new bullets, integrates them into a rolling prose summary capped at 50 words. Runs in parallel with the next audio window being buffered, not on the critical path.
+
+This maps to the **planning** and **reflection** patterns described in the proposal. The planner handles the planning decision (summarise now or keep listening). The summarizer handles reflection — continuously maintaining a compressed representation of the full session that could be used to contextualise future windows. In the current implementation the summary is maintained but intentionally excluded from the planner prompt (see below); this architectural choice is the central experimental finding.
+
+### Architecture
 
 ```
 Microphone / Audio file
@@ -35,15 +48,15 @@ Microphone / Audio file
 
 **Key design decisions:**
 
-- **Summary excluded from planner prompt.** The planner receives only the current transcript window and the last 5 bullets. The rolling summary is maintained separately and updated in parallel. This bounds planner prompt size regardless of session length and was the single most impactful change across the experiment runs.
+- **Summary excluded from planner prompt.** The planner receives only the current transcript window and the last 5 bullets — not the rolling summary. The summary is maintained in parallel as a user-facing artifact but does not feed back into the planner. This bounds planner prompt size regardless of session length. It was the single most impactful change across the experiment runs (see Results).
 
 - **Structured output.** Both agents use schema-constrained generation (`@Generable BulletOutput`, JSON schema for Ollama). No free-text parsing; output is typed at the framework level.
 
 - **Actor-serialized summary store.** `SummaryStore` is a Swift actor. Concurrent summary updates are serialized automatically; the orchestrator unlocks immediately after the planner returns, not after the summary update completes.
 
-- **Word-count summary cap.** The summary is truncated to ≤ 50 words at sentence boundaries after each update. This keeps the summary-update prompt size bounded regardless of how long the session runs.
+- **Word-count summary cap.** The summary is truncated to ≤ 50 words at sentence boundaries after each update, bounding summary-update prompt size and latency.
 
-- **Deduplication.** New bullets are filtered against prior bullets using edit-distance similarity before being appended. A prompt-echo filter rejects bullets that reproduce prompt scaffolding labels or contain fewer than 4 words.
+- **Deduplication.** New bullets are filtered against prior bullets using edit-distance similarity. A prompt-echo filter additionally rejects bullets that reproduce prompt scaffolding labels or contain fewer than 4 words.
 
 ### Inference backends
 
@@ -54,11 +67,11 @@ Microphone / Audio file
 
 ### Metrics
 
-Every inference event is logged to JSONL: `prefill_start`, `first_token`, `decode_end`, `rss_sample` (200 ms interval), `summary_update`, `dedup_dropped`. The same schema is replayed through Ollama/vLLM via `Eval/replay.py` for baseline comparison without requiring macOS or raw audio.
+Every inference event is logged to JSONL: `prefill_start`, `first_token`, `decode_end`, `rss_sample` (200 ms interval), `summary_update`, `dedup_dropped`. The same schema is replayed through Ollama via `Eval/replay.py` for baseline comparison without requiring macOS or raw audio.
 
 ### Prefill and decode measurement
 
-Prefill and decode are not directly observable from the FoundationModels API. They are approximated from wall-clock timestamps around the streaming response:
+Prefill and decode are not directly observable from the FoundationModels API. They are approximated from wall-clock timestamps:
 
 - **Prefill** = time from request submission to first streaming chunk (TTFT)
 - **Decode** = time from first streaming chunk to stream completion
@@ -69,7 +82,21 @@ This is consistent with standard LLM benchmarking conventions. Three caveats app
 
 ## Performance Results
 
-Results are consistent across runs 2 and 3 (run 1 is a pilot with a prompt-echo bug and a 10 s cadence).
+### Experiment
+
+Three runs were conducted with progressively refined configuration:
+
+| Run | Duration | Windows | Summary in planner | Summary cap | Notes |
+|---|---|---|---|---|---|
+| run_20260609 | 2.4 min | 7 | **Yes** | 500 words | Pilot; prompt-echo bug present |
+| run_20260610 | 13.9 min | 38 | No | 200 words | Summary removed from planner prompt |
+| run_20260611 | 6.4 min | 18 | No | **50 words** | Cap reduced to force early engagement |
+
+The key experimental variable between run 1 and run 2 was whether the rolling summary was included in the planner prompt. In run 1 the planner received `[summary] + [transcript] + [prior bullets]`; in runs 2–3 it receives only `[transcript] + [prior bullets]`. This was hypothesised to prevent prompt size — and therefore latency — from growing with session age.
+
+The summary cap was reduced from 500 → 200 → 50 words across runs for two reasons: (1) to ensure the cap engages within a short session, producing observable evidence that summary size is bounded; (2) to keep summary-update prompt size and latency small and stable. At 50 words the cap engaged by window 8 (~2.7 min) in run 3 and held for the remaining 10 windows.
+
+Each run includes an Ollama llama3.1:8b baseline replayed from the same JSONL, allowing direct latency comparison on identical prompts without re-running audio.
 
 ### Latency
 
@@ -83,7 +110,7 @@ Results are consistent across runs 2 and 3 (run 1 is a pilot with a prompt-echo 
 
 Total latency is ~1.5 s for both backends. FoundationModels is faster at decode (1.6–1.7×); Ollama is faster at prefill (2–2.4×). At the 20 s window cadence, either backend completes inference well within the next window interval.
 
-**Latency is session-age-independent.** Removing the rolling summary from the planner prompt collapsed the tokens\_in → latency correlation from R² ≈ 0.73 (run 1, summary in prompt) to R² ≈ 0.003 (runs 2–3). Latency variance is now driven by transcript content density, not session length.
+**Latency is session-age-independent.** Removing the rolling summary from the planner prompt collapsed the tokens\_in → latency correlation from R² ≈ 0.73 (run 1, summary in prompt) to R² ≈ 0.003 (runs 2–3). In run 1, both prefill and decode grew linearly with tokens\_in as the summary accumulated; decode scaled 4× faster than prefill (3.62 vs 0.87 ms/token), likely because constrained structured-output decoding attends over the full context at each step. After the architectural change, latency variance is driven by transcript content density, not session length.
 
 ### Memory
 
@@ -101,9 +128,9 @@ App process memory is flat and session-length-independent. Segment count grows l
 |---|---|
 | tokens\_in mean (range) | 213 (96–299) across stable runs |
 | Trend over session | None — no growth in any run |
-| Summary words (50-word cap) | Cap engaged by window 8 (~2.7 min); held for remaining windows |
+| Summary words (50-word cap run) | Cap engaged by window 8 (~2.7 min); held for remaining windows |
 
-tokens\_in is bounded by the 25 s transcript window size and the 5-bullet prior context — both architecturally capped. The summary cap additionally bounds summary-update prompt size and latency.
+tokens\_in is bounded by the 25 s transcript window size and the 5-bullet prior context — both architecturally capped. The summary cap additionally bounds summary-update prompt size and latency. Notably, tokens\_in was stable even before the cap engaged: since the summary is not in the planner prompt, prompt size depends only on speech density in the current window and the prior-bullet count, both of which are independent of session age.
 
 ### Parallel summary
 
@@ -113,7 +140,7 @@ tokens\_in is bounded by the 25 s transcript window size and the 5-bullet prior 
 | Gap to next prefill | 14 346–23 152 ms (mean ~19 s) |
 | Windows on critical path | 0 / 51 across all runs |
 
-The summary update never blocks the next inference window at 20 s cadence. Gap headroom is 6–17× the mean summary duration. The parallel execution provides no user-visible latency benefit at the current cadence.
+The summary update never blocks the next inference window at 20 s cadence. Gap headroom is 6–17× the mean summary duration. Parallelising the summarizer (as proposed) provides no user-visible latency benefit at this cadence — the summarizer already completes well before the next window fires. The breakeven cadence where parallelism would become load-bearing is approximately 2–3 s.
 
 ---
 
