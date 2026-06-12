@@ -56,6 +56,15 @@ Microphone / Audio file
 
 Every inference event is logged to JSONL: `prefill_start`, `first_token`, `decode_end`, `rss_sample` (200 ms interval), `summary_update`, `dedup_dropped`. The same schema is replayed through Ollama/vLLM via `Eval/replay.py` for baseline comparison without requiring macOS or raw audio.
 
+### Prefill and decode measurement
+
+Prefill and decode are not directly observable from the FoundationModels API. They are approximated from wall-clock timestamps around the streaming response:
+
+- **Prefill** = time from request submission to first streaming chunk (TTFT)
+- **Decode** = time from first streaming chunk to stream completion
+
+This is consistent with standard LLM benchmarking conventions. Three caveats apply: (1) structured-output constrained decoding may buffer the first chunk until a valid partial JSON structure forms, making TTFT a slight overestimate of true prefill time; (2) Swift async/await scheduling adds a small constant overhead to TTFT; (3) when `streamResponse` falls back to the non-streaming `respond()` path, only total latency is recorded and prefill is reported as 0.
+
 ---
 
 ## Performance Results
