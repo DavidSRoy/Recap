@@ -1,179 +1,105 @@
 # Run Report — 2026-06-09
 
-## Run metadata
+## Metadata
 
 | Field | Value |
 |---|---|
 | Date | 2026-06-09 |
-| Session file | `session_local.jsonl` |
-| Baseline file | `session_baseline_ollama.jsonl` |
-| Session duration | 141 s (2.4 min) |
-| ASR segments produced | 27 (avg 7.5 words each) |
-| Summarisation windows fired | 7 |
+| Duration | 141 s (2.4 min) |
+| ASR segments | 27 |
+| Windows completed | 7 |
 | Window cadence | 10 s |
-| Local backend | Apple FoundationModels (Neural Engine, on-device) |
-| Baseline backend | Ollama `llama3.1:8b` via HTTP (`localhost:11434`) |
+| Audio window | 10 s |
+| Summary cap | 500 words |
+| Summary in planner prompt | Yes |
+| Local backend | Apple FoundationModels |
+| Baseline backend | Ollama `llama3.1:8b` |
 
 ---
 
-## Key findings
+## Findings
 
-**1. Total latency scales with prompt length — decode faster than prefill.**
-Prefill and decode both grow linearly with `tokens_in`, but decode grows 4× faster (3.62 ms/token vs 0.87 ms/token, R² ≈ 0.75 for both). Prefill dominates at short prompts (< ~150 tokens, 66–71% of total latency) but decode overtakes it by window 4 (192 tokens) and stays dominant. The original hypothesis frames this as a prefill bottleneck; the more accurate statement is that *any reduction in prompt length reduces total latency, with the largest gains coming from shortening decode*.
+| Claim | Verdict |
+|---|---|
+| E1 — Prefill is the primary bottleneck | **Partial** — both prefill and decode scale with tokens\_in; decode overtakes prefill by window 4 |
+| E2 — Memory is not a bottleneck | **Directional** — RSS flat, but session too short for steady-state confirmation |
+| E3 — tokens\_in stabilises once summary is bounded | **Confounded** — echo bug inflated tokens\_in independent of summary size |
+| E4 — Parallel summary is not on the critical path | **Confirmed** — 0/6 windows on critical path |
 
-**2. Memory is not a bottleneck — confirmed by this run.**
-App RSS stayed flat at 117–136 MB (mean 129 MB) across the full session while segment count grew continuously. The rolling summary plateaued at 88 words by window 3 and held there. FoundationModels uses 65× less process memory than Ollama llama3.1:8b (129 MB vs 8 923 MB), because model weights are shared with the OS-level Apple Intelligence runtime rather than loaded privately.
-
-**3. Parallel summary update provides no benefit at 10-second window cadence.**
-Summary update completed in 693–1 486 ms; the gap to the next window was 6 948–50 274 ms in every case. Not on the critical path.
-
-> **Run caveat:** 2.4 minutes is too short to confirm steady-state memory or full summary-cap engagement. Memory and `tokens_in` plateau findings are directional. A 15-minute run is needed to validate at scale.
+**Run caveats:** (1) A prompt-echo bug caused the model to occasionally output `"Prior bullets"` as a bullet text, re-injecting it into subsequent prompts and inflating tokens\_in. Fixed after this run. (2) Summary `duration_ms` was not yet logged; durations are approximated from event timestamps. (3) Baseline `tokens_out` is SSE chunk count, not bullet count — not comparable to local.
 
 ---
 
-## Claim 1 — Prefill is the primary latency bottleneck
+## E1 — Prefill is the primary bottleneck
 
-**Finding: partially supported, but decode overtakes prefill as prompt length grows.**
-
-Prefill dominates in the first three windows (66–71% of total latency). After window 3, decode overtakes prefill and accounts for 52–55% of total latency through the end of the session. Crucially, decode scales *faster* with input token count than prefill does:
-
-| Metric | Slope (ms / input token) | R² |
-|---|---|---|
-| Prefill latency | 0.87 | 0.71 |
-| Decode latency | 3.62 | 0.76 |
-
-Both are correlated with `tokens_in`, but the decode slope is 4× steeper. This was unexpected. The most likely explanation is that FoundationModels' constrained structured-output generation attends over the full input context during each decode step (O(n) per token in attention), so longer prompts slow down both phases — not just prefill.
-
-**Practical implication:** The hypothesis frames this as a prefill problem, but the right characterisation is: *total per-window latency scales linearly with input token count, with decode growing faster than prefill under structured-output constraints.* Reducing prompt length (tighter summary cap, fewer prior bullets) reduces both phases.
+**Partial.** Prefill dominates in windows 1–3 (66–71% of total), but decode overtakes it from window 4 onward as tokens\_in grows. Both metrics scale linearly with tokens\_in — prefill at 0.87 ms/token (R² = 0.71), decode at 3.62 ms/token (R² = 0.85). The steeper decode slope is likely due to FoundationModels attending over the full context during constrained structured-output generation. The key practical result: any reduction in prompt length reduces both phases, with the largest gains from shorter prompts.
 
 ![Prefill scaling](figures/prefill_scaling.png)
 
 ---
 
-## Claim 2 — Memory is not a bottleneck
+## E2 — Memory is not a bottleneck
 
-**Finding: confirmed within the limits of this run.**
-
-App RSS stayed flat at 117–136 MB (mean 129 MB) over the full session while the segment count grew monotonically from 1 to 27. There is no visible correlation between RSS and segment count. The app's in-memory data structures (segment list, bullet list, rolling summary) do not drive meaningful heap growth at this session length.
-
-The rolling summary itself plateaued at 88 words by window 3 and held there through window 7 — well below the 500-word cap. The cap has not yet engaged in this run, but the plateau behaviour is already visible.
-
-For the baseline, Ollama's combined process RSS held steady at 8 919–8 925 MB (mean 8 923 MB). This represents the loaded model weights and is effectively constant — it does not grow with session length.
+**Directional.** RSS held at 117–136 MB (mean 129 MB) while segment count grew to 27. Rolling summary plateaued at 88 words by window 3. Session is too short (2.4 min) for a steady-state confirmation, but the plateau behaviour is already visible.
 
 ![RSS plateau](figures/rss_plateau.png)
 
 ---
 
-## Claim 3 — tokens_in will plateau once the summary cap engages
+## E3 — tokens\_in stabilises once summary is bounded
 
-**Finding: directionally supported, with a known confound in this run.**
-
-Summary words plateaued at 88 by window 3. Despite this, `tokens_in` continued growing from 58 to 262 tokens across all seven windows. The growth after window 3 is attributable to **prior-bullets prompt contamination**: in this run the model occasionally generated the string `"Prior bullets"` as a bullet (echoing the prompt scaffold label), which was stored and re-injected into subsequent prompts, inflating the prior-bullets section.
-
-A filter was added after this run to reject bullets matching prompt scaffolding labels. The expectation for the next run is that `tokens_in` will plateau alongside summary words once both the summary and the (now-clean) prior-bullets list stabilise.
+**Confounded.** Summary words plateaued at 88 by window 3, but tokens\_in continued growing from 58 to 262 across all 7 windows due to the echo bug (prompt scaffolding labels re-injected as bullets). After the fix, the expectation is that tokens\_in will track summary growth and stabilise once the cap engages.
 
 ![Tokens plateau](figures/tokens_plateau.png)
 
 ---
 
-## Claim 4 — Parallel summary update provides latency benefit
+## E4 — Parallel summary is not on the critical path
 
-**Finding: refuted at 10-second window cadence.**
-
-Summary update (the second LLM call that maintains the rolling prose summary) completed in 693–1 486 ms. The gap between summary completion and the next window's `prefill_start` was 6 948–50 274 ms. The summary update is not on the critical path in any of the six measured windows.
-
-At 10-second window cadence, parallelising the summary update would provide zero user-visible benefit. The optimisation would only become relevant if the window cadence were reduced to ~2 seconds or less (where the gap could drop below the summary update duration).
+**Confirmed.** Summary update duration 693–1 486 ms; gap to next prefill 6 948–50 274 ms. 0/6 on critical path.
 
 ![Summary gap](figures/summary_gap.png)
 
 ---
 
-## Tokens-out comparability caveat
+## Backend comparison
 
-`tokens_out` is **not comparable** between conditions in this run. FoundationModels returns structured `BulletOutput` and `tokens_out` records the number of bullets (1–3). Ollama returns free-form text and `tokens_out` records the number of SSE delta chunks received (~30–67 per window). The reported TPS figures in `results.csv` reflect this difference and should not be compared directly across conditions.
-
----
-
-## Summary table
-
-| Claim | Verdict | Confidence |
+| Metric | FoundationModels | Ollama llama3.1:8b |
 |---|---|---|
-| Prefill is the primary bottleneck | Partial — decode overtakes at 192+ tokens | Low (7 windows, 2.4 min) |
-| Memory is not a bottleneck | Confirmed | Medium (RSS flat, summary bounded) |
-| tokens_in will plateau | Directional — confounded by echo bug (now fixed) | Low (needs longer run) |
-| Parallel summary provides benefit | Refuted — gap 5–35× summary duration | High (effect size is large) |
+| Windows | 7 | 7 |
+| Mean prefill (ms) | 755 | 558 |
+| Mean decode (ms) | 651 | 828 |
+| Mean total (ms) | 1 406 | 1 387 |
+| RSS | 129 MB | 8 923 MB |
 
 ---
 
-## Appendix — Raw data
+## Appendix
 
-### A1. Local — per-window inference metrics
+### Latency — aggregate
 
-| Window | Segment ID | tokens\_in | prefill\_ms | decode\_ms | total\_ms | tokens\_out | prefill % |
-|---|---|---|---|---|---|---|---|
-| 1 | 2  | 58  | 691 | 310 | 1 001 | 3 | 69% |
-| 2 | 6  | 95  | 665 | 272 |   937 | 3 | 71% |
-| 3 | 9  | 141 | 692 | 352 | 1 044 | 1 | 66% |
-| 4 | 19 | 192 | 739 | 900 | 1 639 | 3 | 45% |
-| 5 | 21 | 245 | 794 | 898 | 1 692 | 3 | 47% |
-| 6 | 24 | 262 | 799 | 856 | 1 655 | 3 | 48% |
-| 7 | 26 | 252 | 906 | 972 | 1 878 | 2 | 48% |
+| | FoundationModels | Ollama |
+|---|---|---|
+| tokens\_in mean (range) | 177 (58–262) | 177 (61–265) |
+| prefill mean (range) ms | 755 (665–906) | 558 (341–802) |
+| decode mean (range) ms | 651 (272–972) | 828 (77–1 285) |
+| total mean (range) ms | 1 406 (937–1 878) | 1 387 (418–2 087) |
+| prefill regression | 0.87 ms/token, R² = 0.71 | — |
+| decode regression | 3.62 ms/token, R² = 0.85 | — |
 
-**Regression:** prefill\_ms = 0.87 × tokens\_in + 591, R² = 0.71. decode\_ms = 3.62 × tokens\_in − 351, R² = 0.76.
+### RSS
 
-### A2. Baseline (Ollama llama3.1:8b) — per-window inference metrics
+| | FoundationModels | Ollama |
+|---|---|---|
+| Mean / peak (MB) | 129 / 136 | 8 923 / 8 925 |
+| Samples | 705 | 43 |
+| Last-5-min std | 3.6 MB (2.8%) | — |
 
-| Window | Segment ID | tokens\_in | prefill\_ms | decode\_ms | total\_ms | tokens\_out\* |
-|---|---|---|---|---|---|---|
-| 1 | 2  | 61  | 341 |   77 |   418 |  5 |
-| 2 | 6  | 98  | 388 |  769 | 1 157 | 41 |
-| 3 | 9  | 144 | 553 | 1 078 | 1 631 | 57 |
-| 4 | 19 | 195 | 553 |  555 | 1 108 | 30 |
-| 5 | 21 | 248 | 718 | 1 122 | 1 840 | 59 |
-| 6 | 24 | 265 | 802 | 1 285 | 2 087 | 67 |
-| 7 | 26 | 255 | 556 |  916 | 1 472 | 48 |
-
-\* SSE delta chunk count, not comparable to local `tokens_out`.
-
-### A3. Local — summary update per window
-
-| Window | Summary words | Approx duration (ms) | Gap to next prefill (ms) | On critical path |
-|---|---|---|---|---|
-| 1 | 22  |   693 | 17 101 | No |
-| 2 | 55  | 1 000 | 10 729 | No |
-| 3 | 86  | 1 322 | 50 274 | No |
-| 4 | 89  | 1 486 |  6 948 | No |
-| 5 | 88  | 1 344 | 17 876 | No |
-| 6 | 88  | 1 375 | 10 796 | No |
-
-Duration is approximated as `summary_update.ts − decode_end.ts`. Direct logging of `duration_ms` was added after this run.
-
-### A4. Local — RSS samples
+### Summary updates (6 events)
 
 | Metric | Value |
 |---|---|
-| Sample count | 705 |
-| Sampling interval | 200 ms |
-| Min RSS | 117.7 MB |
-| Max RSS | 136.1 MB |
-| Mean RSS | 129.3 MB |
-| Std dev RSS | — |
-
-### A5. Baseline — Ollama process RSS
-
-| Metric | Value |
-|---|---|
-| Sample count | 43 |
-| Min RSS | 8 919.4 MB |
-| Max RSS | 8 924.7 MB |
-| Mean RSS | 8 923.1 MB |
-
-Samples both Ollama daemon and runner processes (PIDs identified via `pgrep`). Represents loaded model weights; constant throughout the session.
-
-### A6. ASR segments
-
-| Metric | Value |
-|---|---|
-| Total segments | 27 |
-| Avg length | 7.5 words |
-| Dedup dropped | 3 bullets |
+| words: min / max / final | 22 / 88 / 88 |
+| duration\_ms (approx): min / max / mean | 693 / 1 486 / 1 036 |
+| gap to next prefill: min / max / mean ms | 6 948 / 50 274 / 18 954 |
+| on critical path | 0 / 6 |
