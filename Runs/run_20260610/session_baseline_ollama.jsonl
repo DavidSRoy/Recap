@@ -1,438 +1,414 @@
-{"ts": "2026-06-11T05:56:24.391Z", "event": "rss_sample", "rss_mb": 32.3}
-{"ts": "2026-06-11T05:56:24.603Z", "event": "rss_sample", "rss_mb": 32.3}
-{"ts": "2026-06-11T05:56:24.812Z", "event": "rss_sample", "rss_mb": 63.1}
-{"ts": "2026-06-11T05:56:25.021Z", "event": "rss_sample", "rss_mb": 63.3}
-{"ts": "2026-06-11T05:56:25.230Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:25.441Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:25.655Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:25.865Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:26.077Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:26.290Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:26.502Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:26.711Z", "event": "rss_sample", "rss_mb": 63.4}
-{"ts": "2026-06-11T05:56:26.925Z", "event": "rss_sample", "rss_mb": 63.6}
-{"ts": "2026-06-11T05:56:27.137Z", "event": "rss_sample", "rss_mb": 63.6}
-{"ts": "2026-06-11T05:56:27.351Z", "event": "rss_sample", "rss_mb": 63.6}
-{"ts": "2026-06-11T05:56:27.564Z", "event": "rss_sample", "rss_mb": 63.6}
-{"ts": "2026-06-11T05:56:27.777Z", "event": "rss_sample", "rss_mb": 63.6}
-{"ts": "2026-06-11T05:56:24.386Z", "event": "prefill_start", "segment_id": 1}
-{"ts": "2026-06-11T05:56:27.213Z", "event": "first_token", "segment_id": 1}
-{"ts": "2026-06-11T05:56:27.805Z", "event": "decode_end", "segment_id": 1, "tokens_in": 110, "tokens_out": 2}
-{"ts": "2026-06-11T05:56:27.989Z", "event": "rss_sample", "rss_mb": 63.7}
-{"ts": "2026-06-11T05:56:28.202Z", "event": "rss_sample", "rss_mb": 63.7}
-{"ts": "2026-06-11T05:56:28.416Z", "event": "rss_sample", "rss_mb": 63.7}
-{"ts": "2026-06-11T05:56:28.628Z", "event": "rss_sample", "rss_mb": 63.7}
-{"ts": "2026-06-11T05:56:28.838Z", "event": "rss_sample", "rss_mb": 63.7}
-{"ts": "2026-06-11T05:56:27.806Z", "event": "prefill_start", "segment_id": 9}
-{"ts": "2026-06-11T05:56:28.114Z", "event": "first_token", "segment_id": 9}
-{"ts": "2026-06-11T05:56:28.947Z", "event": "decode_end", "segment_id": 9, "tokens_in": 166, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:29.049Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:29.262Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:29.474Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:29.686Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:29.898Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:30.108Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:28.947Z", "event": "prefill_start", "segment_id": 18}
-{"ts": "2026-06-11T05:56:29.251Z", "event": "first_token", "segment_id": 18}
-{"ts": "2026-06-11T05:56:30.175Z", "event": "decode_end", "segment_id": 18, "tokens_in": 179, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:30.320Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:30.530Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:30.738Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:30.948Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:31.159Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:31.372Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:31.582Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:30.176Z", "event": "prefill_start", "segment_id": 26}
-{"ts": "2026-06-11T05:56:30.481Z", "event": "first_token", "segment_id": 26}
-{"ts": "2026-06-11T05:56:31.649Z", "event": "decode_end", "segment_id": 26, "tokens_in": 186, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:31.793Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:32.004Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:32.218Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:32.429Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:32.641Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:32.854Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:33.061Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:31.649Z", "event": "prefill_start", "segment_id": 34}
-{"ts": "2026-06-11T05:56:32.050Z", "event": "first_token", "segment_id": 34}
-{"ts": "2026-06-11T05:56:33.218Z", "event": "decode_end", "segment_id": 34, "tokens_in": 246, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:33.273Z", "event": "rss_sample", "rss_mb": 63.8}
-{"ts": "2026-06-11T05:56:33.485Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:33.697Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:33.911Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:34.125Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:34.334Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:34.544Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:33.219Z", "event": "prefill_start", "segment_id": 43}
-{"ts": "2026-06-11T05:56:33.626Z", "event": "first_token", "segment_id": 43}
-{"ts": "2026-06-11T05:56:34.591Z", "event": "decode_end", "segment_id": 43, "tokens_in": 265, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:34.757Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:34.969Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:35.179Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:35.392Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:35.605Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:35.815Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:34.592Z", "event": "prefill_start", "segment_id": 53}
-{"ts": "2026-06-11T05:56:35.000Z", "event": "first_token", "segment_id": 53}
-{"ts": "2026-06-11T05:56:35.989Z", "event": "decode_end", "segment_id": 53, "tokens_in": 269, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:36.023Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:36.238Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:36.452Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:36.667Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:36.877Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:37.088Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:37.299Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:35.990Z", "event": "prefill_start", "segment_id": 62}
-{"ts": "2026-06-11T05:56:36.400Z", "event": "first_token", "segment_id": 62}
-{"ts": "2026-06-11T05:56:37.458Z", "event": "decode_end", "segment_id": 62, "tokens_in": 278, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:37.507Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:37.722Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:37.936Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:38.148Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:38.360Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:38.571Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:38.785Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:38.998Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:39.211Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:37.459Z", "event": "prefill_start", "segment_id": 63}
-{"ts": "2026-06-11T05:56:37.866Z", "event": "first_token", "segment_id": 63}
-{"ts": "2026-06-11T05:56:39.262Z", "event": "decode_end", "segment_id": 63, "tokens_in": 276, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:39.423Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:39.632Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:39.841Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:40.048Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:40.261Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:40.474Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:40.686Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:39.263Z", "event": "prefill_start", "segment_id": 70}
-{"ts": "2026-06-11T05:56:39.675Z", "event": "first_token", "segment_id": 70}
-{"ts": "2026-06-11T05:56:40.777Z", "event": "decode_end", "segment_id": 70, "tokens_in": 317, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:40.899Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:41.106Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:41.318Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:41.530Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:41.743Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:41.960Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:42.172Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:40.779Z", "event": "prefill_start", "segment_id": 79}
-{"ts": "2026-06-11T05:56:41.195Z", "event": "first_token", "segment_id": 79}
-{"ts": "2026-06-11T05:56:42.380Z", "event": "decode_end", "segment_id": 79, "tokens_in": 307, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:42.381Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:42.593Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:42.807Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:43.021Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:43.235Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:43.445Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:43.659Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:43.873Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:42.380Z", "event": "prefill_start", "segment_id": 85}
-{"ts": "2026-06-11T05:56:42.783Z", "event": "first_token", "segment_id": 85}
-{"ts": "2026-06-11T05:56:43.901Z", "event": "decode_end", "segment_id": 85, "tokens_in": 229, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:44.088Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:44.297Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:44.510Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:44.725Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:44.936Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:45.148Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:45.357Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:45.570Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:43.902Z", "event": "prefill_start", "segment_id": 93}
-{"ts": "2026-06-11T05:56:44.302Z", "event": "first_token", "segment_id": 93}
-{"ts": "2026-06-11T05:56:45.674Z", "event": "decode_end", "segment_id": 93, "tokens_in": 239, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:45.780Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:45.993Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:46.206Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:46.418Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:46.629Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:46.844Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:47.055Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:45.675Z", "event": "prefill_start", "segment_id": 101}
-{"ts": "2026-06-11T05:56:46.124Z", "event": "first_token", "segment_id": 101}
-{"ts": "2026-06-11T05:56:47.177Z", "event": "decode_end", "segment_id": 101, "tokens_in": 271, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:47.268Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:47.477Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:47.686Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:47.893Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:48.104Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:48.317Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:48.530Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:48.742Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:47.178Z", "event": "prefill_start", "segment_id": 109}
-{"ts": "2026-06-11T05:56:47.584Z", "event": "first_token", "segment_id": 109}
-{"ts": "2026-06-11T05:56:48.889Z", "event": "decode_end", "segment_id": 109, "tokens_in": 285, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:48.948Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:49.156Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:49.368Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:49.582Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:49.790Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:50.003Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:50.215Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:50.427Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:48.890Z", "event": "prefill_start", "segment_id": 110}
-{"ts": "2026-06-11T05:56:49.299Z", "event": "first_token", "segment_id": 110}
-{"ts": "2026-06-11T05:56:50.457Z", "event": "decode_end", "segment_id": 110, "tokens_in": 286, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:50.639Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:50.846Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:51.056Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:51.265Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:51.478Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:51.692Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:51.904Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:50.458Z", "event": "prefill_start", "segment_id": 111}
-{"ts": "2026-06-11T05:56:50.866Z", "event": "first_token", "segment_id": 111}
-{"ts": "2026-06-11T05:56:51.912Z", "event": "decode_end", "segment_id": 111, "tokens_in": 279, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:52.115Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:52.327Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:52.539Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:52.749Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:52.960Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:53.172Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:51.913Z", "event": "prefill_start", "segment_id": 112}
-{"ts": "2026-06-11T05:56:52.325Z", "event": "first_token", "segment_id": 112}
-{"ts": "2026-06-11T05:56:53.271Z", "event": "decode_end", "segment_id": 112, "tokens_in": 279, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:53.383Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:53.596Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:53.809Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:54.020Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:54.231Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:54.443Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:54.652Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:54.863Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:53.271Z", "event": "prefill_start", "segment_id": 120}
-{"ts": "2026-06-11T05:56:53.679Z", "event": "first_token", "segment_id": 120}
-{"ts": "2026-06-11T05:56:54.868Z", "event": "decode_end", "segment_id": 120, "tokens_in": 269, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:55.074Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:55.286Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:55.498Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:55.711Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:55.923Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:56.135Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:54.869Z", "event": "prefill_start", "segment_id": 121}
-{"ts": "2026-06-11T05:56:55.276Z", "event": "first_token", "segment_id": 121}
-{"ts": "2026-06-11T05:56:56.285Z", "event": "decode_end", "segment_id": 121, "tokens_in": 256, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:56.345Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:56.560Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:56.772Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:56.984Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:57.191Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:57.404Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:56.286Z", "event": "prefill_start", "segment_id": 129}
-{"ts": "2026-06-11T05:56:56.691Z", "event": "first_token", "segment_id": 129}
-{"ts": "2026-06-11T05:56:57.540Z", "event": "decode_end", "segment_id": 129, "tokens_in": 256, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:57.611Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:57.823Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:58.036Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:58.250Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:58.464Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:58.674Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:57.540Z", "event": "prefill_start", "segment_id": 137}
-{"ts": "2026-06-11T05:56:57.946Z", "event": "first_token", "segment_id": 137}
-{"ts": "2026-06-11T05:56:58.800Z", "event": "decode_end", "segment_id": 137, "tokens_in": 244, "tokens_out": 3}
-{"ts": "2026-06-11T05:56:58.886Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:59.095Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:59.308Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:59.519Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:59.731Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:59.943Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:00.156Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:00.370Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:56:58.801Z", "event": "prefill_start", "segment_id": 145}
-{"ts": "2026-06-11T05:56:59.207Z", "event": "first_token", "segment_id": 145}
-{"ts": "2026-06-11T05:57:00.441Z", "event": "decode_end", "segment_id": 145, "tokens_in": 249, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:00.587Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:00.800Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:01.012Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:01.226Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:01.437Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:01.650Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:01.862Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:02.073Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:02.287Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:00.442Z", "event": "prefill_start", "segment_id": 154}
-{"ts": "2026-06-11T05:57:00.758Z", "event": "first_token", "segment_id": 154}
-{"ts": "2026-06-11T05:57:02.357Z", "event": "decode_end", "segment_id": 154, "tokens_in": 224, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:02.497Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:02.709Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:02.921Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:03.131Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:03.343Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:03.553Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:03.765Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:03.977Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:02.358Z", "event": "prefill_start", "segment_id": 161}
-{"ts": "2026-06-11T05:57:02.765Z", "event": "first_token", "segment_id": 161}
-{"ts": "2026-06-11T05:57:04.073Z", "event": "decode_end", "segment_id": 161, "tokens_in": 261, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:04.189Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:04.400Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:04.612Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:04.821Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:05.036Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:05.249Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:05.461Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:05.675Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:05.885Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:04.074Z", "event": "prefill_start", "segment_id": 168}
-{"ts": "2026-06-11T05:57:04.480Z", "event": "first_token", "segment_id": 168}
-{"ts": "2026-06-11T05:57:05.915Z", "event": "decode_end", "segment_id": 168, "tokens_in": 256, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:06.096Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:06.308Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:06.519Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:06.732Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:06.940Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:07.152Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:07.365Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:07.573Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:05.915Z", "event": "prefill_start", "segment_id": 176}
-{"ts": "2026-06-11T05:57:06.322Z", "event": "first_token", "segment_id": 176}
-{"ts": "2026-06-11T05:57:07.583Z", "event": "decode_end", "segment_id": 176, "tokens_in": 272, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:07.786Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:07.997Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:08.211Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:08.420Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:08.633Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:08.844Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:09.054Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:09.262Z", "event": "rss_sample", "rss_mb": 63.9}
-{"ts": "2026-06-11T05:57:07.584Z", "event": "prefill_start", "segment_id": 186}
-{"ts": "2026-06-11T05:57:07.899Z", "event": "first_token", "segment_id": 186}
-{"ts": "2026-06-11T05:57:09.355Z", "event": "decode_end", "segment_id": 186, "tokens_in": 217, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:09.474Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:09.686Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:09.896Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:10.107Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:10.320Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:10.529Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:09.356Z", "event": "prefill_start", "segment_id": 196}
-{"ts": "2026-06-11T05:57:09.764Z", "event": "first_token", "segment_id": 196}
-{"ts": "2026-06-11T05:57:10.544Z", "event": "decode_end", "segment_id": 196, "tokens_in": 264, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:10.745Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:10.957Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:11.168Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:11.380Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:11.592Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:11.805Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:10.545Z", "event": "prefill_start", "segment_id": 206}
-{"ts": "2026-06-11T05:57:10.942Z", "event": "first_token", "segment_id": 206}
-{"ts": "2026-06-11T05:57:11.892Z", "event": "decode_end", "segment_id": 206, "tokens_in": 230, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:12.018Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:12.230Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:12.444Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:12.654Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:12.862Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:11.893Z", "event": "prefill_start", "segment_id": 212}
-{"ts": "2026-06-11T05:57:12.210Z", "event": "first_token", "segment_id": 212}
-{"ts": "2026-06-11T05:57:12.998Z", "event": "decode_end", "segment_id": 212, "tokens_in": 219, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:13.071Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:13.284Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:13.493Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:13.706Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:13.918Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:14.129Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:14.343Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:12.999Z", "event": "prefill_start", "segment_id": 222}
-{"ts": "2026-06-11T05:57:13.402Z", "event": "first_token", "segment_id": 222}
-{"ts": "2026-06-11T05:57:14.371Z", "event": "decode_end", "segment_id": 222, "tokens_in": 235, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:14.554Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:14.768Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:14.982Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:15.194Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:15.410Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:15.623Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:14.372Z", "event": "prefill_start", "segment_id": 232}
-{"ts": "2026-06-11T05:57:14.682Z", "event": "first_token", "segment_id": 232}
-{"ts": "2026-06-11T05:57:15.835Z", "event": "decode_end", "segment_id": 232, "tokens_in": 183, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:15.838Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:16.049Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:16.261Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:16.471Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:16.682Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:15.836Z", "event": "prefill_start", "segment_id": 239}
-{"ts": "2026-06-11T05:57:16.149Z", "event": "first_token", "segment_id": 239}
-{"ts": "2026-06-11T05:57:16.782Z", "event": "decode_end", "segment_id": 239, "tokens_in": 214, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:16.897Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:17.105Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:17.318Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:17.532Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:17.745Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:16.783Z", "event": "prefill_start", "segment_id": 249}
-{"ts": "2026-06-11T05:57:17.103Z", "event": "first_token", "segment_id": 249}
-{"ts": "2026-06-11T05:57:17.919Z", "event": "decode_end", "segment_id": 249, "tokens_in": 209, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:17.958Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:18.167Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:18.377Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:18.590Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:18.805Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:19.016Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:19.228Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:17.919Z", "event": "prefill_start", "segment_id": 260}
-{"ts": "2026-06-11T05:57:18.321Z", "event": "first_token", "segment_id": 260}
-{"ts": "2026-06-11T05:57:19.233Z", "event": "decode_end", "segment_id": 260, "tokens_in": 208, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:19.440Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:19.652Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:19.860Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:20.073Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:20.287Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:20.501Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:20.710Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:19.234Z", "event": "prefill_start", "segment_id": 271}
-{"ts": "2026-06-11T05:57:19.539Z", "event": "first_token", "segment_id": 271}
-{"ts": "2026-06-11T05:57:20.714Z", "event": "decode_end", "segment_id": 271, "tokens_in": 176, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:20.921Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:21.131Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:21.344Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:21.557Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:21.767Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:21.981Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:22.193Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:22.402Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:22.614Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:20.714Z", "event": "prefill_start", "segment_id": 282}
-{"ts": "2026-06-11T05:57:21.024Z", "event": "first_token", "segment_id": 282}
-{"ts": "2026-06-11T05:57:22.645Z", "event": "decode_end", "segment_id": 282, "tokens_in": 181, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:22.830Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:23.042Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:23.255Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:23.468Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:23.678Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:23.887Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:22.647Z", "event": "prefill_start", "segment_id": 292}
-{"ts": "2026-06-11T05:57:23.047Z", "event": "first_token", "segment_id": 292}
-{"ts": "2026-06-11T05:57:24.029Z", "event": "decode_end", "segment_id": 292, "tokens_in": 202, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:24.096Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:24.308Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:24.522Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:24.735Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:24.943Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:24.030Z", "event": "prefill_start", "segment_id": 302}
-{"ts": "2026-06-11T05:57:24.434Z", "event": "first_token", "segment_id": 302}
-{"ts": "2026-06-11T05:57:25.135Z", "event": "decode_end", "segment_id": 302, "tokens_in": 215, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:25.151Z", "event": "rss_sample", "rss_mb": 64.9}
-{"ts": "2026-06-11T05:57:25.363Z", "event": "rss_sample", "rss_mb": 64.8}
-{"ts": "2026-06-11T05:57:25.574Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:25.787Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:25.998Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:26.210Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:26.423Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:26.636Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:26.849Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:25.135Z", "event": "prefill_start", "segment_id": 311}
-{"ts": "2026-06-11T05:57:25.539Z", "event": "first_token", "segment_id": 311}
-{"ts": "2026-06-11T05:57:27.057Z", "event": "decode_end", "segment_id": 311, "tokens_in": 224, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:27.060Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:27.268Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:27.476Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:27.685Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:27.897Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:28.105Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:28.316Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:27.058Z", "event": "prefill_start", "segment_id": 322}
-{"ts": "2026-06-11T05:57:27.466Z", "event": "first_token", "segment_id": 322}
-{"ts": "2026-06-11T05:57:28.383Z", "event": "decode_end", "segment_id": 322, "tokens_in": 229, "tokens_out": 3}
-{"ts": "2026-06-11T05:57:28.530Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:28.738Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:28.951Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:29.161Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:29.375Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:29.587Z", "event": "rss_sample", "rss_mb": 64.2}
-{"ts": "2026-06-11T05:57:28.384Z", "event": "prefill_start", "segment_id": 332}
-{"ts": "2026-06-11T05:57:28.789Z", "event": "first_token", "segment_id": 332}
-{"ts": "2026-06-11T05:57:29.665Z", "event": "decode_end", "segment_id": 332, "tokens_in": 220, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:44.832Z", "event": "rss_sample", "rss_mb": 137.5}
+{"ts": "2026-06-12T04:03:45.144Z", "event": "rss_sample", "rss_mb": 137.5}
+{"ts": "2026-06-12T04:03:45.362Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:03:45.582Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:45.803Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:46.022Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:46.240Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:46.459Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:46.683Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:46.913Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:47.140Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:47.365Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:47.594Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:44.818Z", "event": "prefill_start", "segment_id": 1}
+{"ts": "2026-06-12T04:03:47.153Z", "event": "first_token", "segment_id": 1}
+{"ts": "2026-06-12T04:03:47.749Z", "event": "decode_end", "segment_id": 1, "tokens_in": 110, "tokens_out": 2}
+{"ts": "2026-06-12T04:03:47.815Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:48.044Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:48.268Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:48.493Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:48.717Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:47.750Z", "event": "prefill_start", "segment_id": 9}
+{"ts": "2026-06-12T04:03:48.046Z", "event": "first_token", "segment_id": 9}
+{"ts": "2026-06-12T04:03:48.880Z", "event": "decode_end", "segment_id": 9, "tokens_in": 166, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:48.935Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:49.155Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:49.377Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:49.607Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:49.836Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:50.063Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:48.881Z", "event": "prefill_start", "segment_id": 18}
+{"ts": "2026-06-12T04:03:49.182Z", "event": "first_token", "segment_id": 18}
+{"ts": "2026-06-12T04:03:50.104Z", "event": "decode_end", "segment_id": 18, "tokens_in": 179, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:50.286Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:50.513Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:50.740Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:50.968Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:51.197Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:51.424Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:50.105Z", "event": "prefill_start", "segment_id": 26}
+{"ts": "2026-06-12T04:03:50.407Z", "event": "first_token", "segment_id": 26}
+{"ts": "2026-06-12T04:03:51.568Z", "event": "decode_end", "segment_id": 26, "tokens_in": 186, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:51.643Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:51.873Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:52.100Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:52.325Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:52.553Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:52.780Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:53.008Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:51.569Z", "event": "prefill_start", "segment_id": 34}
+{"ts": "2026-06-12T04:03:51.968Z", "event": "first_token", "segment_id": 34}
+{"ts": "2026-06-12T04:03:53.132Z", "event": "decode_end", "segment_id": 34, "tokens_in": 246, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:53.223Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:53.452Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:53.680Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:53.908Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:54.136Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:54.366Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:53.132Z", "event": "prefill_start", "segment_id": 43}
+{"ts": "2026-06-12T04:03:53.535Z", "event": "first_token", "segment_id": 43}
+{"ts": "2026-06-12T04:03:54.496Z", "event": "decode_end", "segment_id": 43, "tokens_in": 265, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:54.588Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:54.816Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:55.043Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:55.272Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:55.496Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:55.724Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:54.497Z", "event": "prefill_start", "segment_id": 53}
+{"ts": "2026-06-12T04:03:54.902Z", "event": "first_token", "segment_id": 53}
+{"ts": "2026-06-12T04:03:55.880Z", "event": "decode_end", "segment_id": 53, "tokens_in": 269, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:55.944Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:56.169Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:56.396Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:56.625Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:56.851Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:57.080Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:57.307Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:55.880Z", "event": "prefill_start", "segment_id": 62}
+{"ts": "2026-06-12T04:03:56.285Z", "event": "first_token", "segment_id": 62}
+{"ts": "2026-06-12T04:03:57.338Z", "event": "decode_end", "segment_id": 62, "tokens_in": 278, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:57.533Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:57.762Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:57.988Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:58.219Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:58.447Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:58.676Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:58.904Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:57.339Z", "event": "prefill_start", "segment_id": 63}
+{"ts": "2026-06-12T04:03:57.740Z", "event": "first_token", "segment_id": 63}
+{"ts": "2026-06-12T04:03:59.127Z", "event": "decode_end", "segment_id": 63, "tokens_in": 276, "tokens_out": 3}
+{"ts": "2026-06-12T04:03:59.131Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:59.359Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:59.591Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:59.819Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:00.047Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:00.271Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:00.495Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:03:59.127Z", "event": "prefill_start", "segment_id": 70}
+{"ts": "2026-06-12T04:03:59.535Z", "event": "first_token", "segment_id": 70}
+{"ts": "2026-06-12T04:04:00.640Z", "event": "decode_end", "segment_id": 70, "tokens_in": 317, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:00.715Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:00.945Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:01.173Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:01.402Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:01.630Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:01.858Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:02.087Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:00.641Z", "event": "prefill_start", "segment_id": 79}
+{"ts": "2026-06-12T04:04:01.052Z", "event": "first_token", "segment_id": 79}
+{"ts": "2026-06-12T04:04:02.228Z", "event": "decode_end", "segment_id": 79, "tokens_in": 307, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:02.308Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:02.537Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:02.764Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:02.993Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:03.220Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:03.448Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:03.675Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:02.229Z", "event": "prefill_start", "segment_id": 85}
+{"ts": "2026-06-12T04:04:02.626Z", "event": "first_token", "segment_id": 85}
+{"ts": "2026-06-12T04:04:03.740Z", "event": "decode_end", "segment_id": 85, "tokens_in": 229, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:03.907Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:04.135Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:04.361Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:04.583Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:04.813Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:05.039Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:05.265Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:05.489Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:03.740Z", "event": "prefill_start", "segment_id": 93}
+{"ts": "2026-06-12T04:04:04.139Z", "event": "first_token", "segment_id": 93}
+{"ts": "2026-06-12T04:04:05.497Z", "event": "decode_end", "segment_id": 93, "tokens_in": 239, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:05.723Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:05.952Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:06.180Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:06.409Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:06.638Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:06.865Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:05.498Z", "event": "prefill_start", "segment_id": 101}
+{"ts": "2026-06-12T04:04:05.904Z", "event": "first_token", "segment_id": 101}
+{"ts": "2026-06-12T04:04:06.953Z", "event": "decode_end", "segment_id": 101, "tokens_in": 271, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:07.091Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:07.320Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:07.549Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:07.775Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:08.004Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:08.232Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:08.461Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:06.954Z", "event": "prefill_start", "segment_id": 109}
+{"ts": "2026-06-12T04:04:07.360Z", "event": "first_token", "segment_id": 109}
+{"ts": "2026-06-12T04:04:08.667Z", "event": "decode_end", "segment_id": 109, "tokens_in": 285, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:08.680Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:08.907Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:09.133Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:09.363Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:09.590Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:09.815Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:10.044Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:08.668Z", "event": "prefill_start", "segment_id": 110}
+{"ts": "2026-06-12T04:04:09.077Z", "event": "first_token", "segment_id": 110}
+{"ts": "2026-06-12T04:04:10.228Z", "event": "decode_end", "segment_id": 110, "tokens_in": 286, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:10.260Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:10.490Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:10.717Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:10.943Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:11.173Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:11.401Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:11.628Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:10.228Z", "event": "prefill_start", "segment_id": 111}
+{"ts": "2026-06-12T04:04:10.635Z", "event": "first_token", "segment_id": 111}
+{"ts": "2026-06-12T04:04:11.674Z", "event": "decode_end", "segment_id": 111, "tokens_in": 279, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:11.856Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:12.081Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:12.308Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:12.534Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:12.757Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:12.984Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:11.675Z", "event": "prefill_start", "segment_id": 112}
+{"ts": "2026-06-12T04:04:12.079Z", "event": "first_token", "segment_id": 112}
+{"ts": "2026-06-12T04:04:13.033Z", "event": "decode_end", "segment_id": 112, "tokens_in": 279, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:13.214Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:13.439Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:13.664Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:13.891Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:14.119Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:14.348Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:14.576Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:13.034Z", "event": "prefill_start", "segment_id": 120}
+{"ts": "2026-06-12T04:04:13.438Z", "event": "first_token", "segment_id": 120}
+{"ts": "2026-06-12T04:04:14.639Z", "event": "decode_end", "segment_id": 120, "tokens_in": 269, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:14.808Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:15.036Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:15.258Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:15.487Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:15.718Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:15.946Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:14.639Z", "event": "prefill_start", "segment_id": 121}
+{"ts": "2026-06-12T04:04:15.046Z", "event": "first_token", "segment_id": 121}
+{"ts": "2026-06-12T04:04:16.054Z", "event": "decode_end", "segment_id": 121, "tokens_in": 256, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:16.171Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:16.401Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:16.629Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:16.857Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:17.083Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:16.054Z", "event": "prefill_start", "segment_id": 129}
+{"ts": "2026-06-12T04:04:16.456Z", "event": "first_token", "segment_id": 129}
+{"ts": "2026-06-12T04:04:17.296Z", "event": "decode_end", "segment_id": 129, "tokens_in": 256, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:17.308Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:17.537Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:17.765Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:17.995Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:18.225Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:18.452Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:17.297Z", "event": "prefill_start", "segment_id": 137}
+{"ts": "2026-06-12T04:04:17.702Z", "event": "first_token", "segment_id": 137}
+{"ts": "2026-06-12T04:04:18.583Z", "event": "decode_end", "segment_id": 137, "tokens_in": 244, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:18.676Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:18.904Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:19.133Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:19.361Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:19.591Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:19.821Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:20.049Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:18.583Z", "event": "prefill_start", "segment_id": 145}
+{"ts": "2026-06-12T04:04:18.986Z", "event": "first_token", "segment_id": 145}
+{"ts": "2026-06-12T04:04:20.230Z", "event": "decode_end", "segment_id": 145, "tokens_in": 249, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:20.268Z", "event": "rss_sample", "rss_mb": 139.2}
+{"ts": "2026-06-12T04:04:20.502Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:20.731Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:20.959Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:21.186Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:21.415Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:21.641Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:21.865Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:22.093Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:20.230Z", "event": "prefill_start", "segment_id": 154}
+{"ts": "2026-06-12T04:04:20.545Z", "event": "first_token", "segment_id": 154}
+{"ts": "2026-06-12T04:04:22.146Z", "event": "decode_end", "segment_id": 154, "tokens_in": 224, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:22.321Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:22.545Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:22.774Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:23.002Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:23.231Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:23.459Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:23.684Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:22.146Z", "event": "prefill_start", "segment_id": 161}
+{"ts": "2026-06-12T04:04:22.549Z", "event": "first_token", "segment_id": 161}
+{"ts": "2026-06-12T04:04:23.860Z", "event": "decode_end", "segment_id": 161, "tokens_in": 261, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:23.904Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:24.133Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:24.362Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:24.591Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:24.817Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:25.044Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:25.268Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:25.495Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:23.861Z", "event": "prefill_start", "segment_id": 168}
+{"ts": "2026-06-12T04:04:24.268Z", "event": "first_token", "segment_id": 168}
+{"ts": "2026-06-12T04:04:25.705Z", "event": "decode_end", "segment_id": 168, "tokens_in": 256, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:25.719Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:25.951Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:26.178Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:26.406Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:26.635Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:26.865Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:27.091Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:27.319Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:25.705Z", "event": "prefill_start", "segment_id": 176}
+{"ts": "2026-06-12T04:04:26.113Z", "event": "first_token", "segment_id": 176}
+{"ts": "2026-06-12T04:04:27.374Z", "event": "decode_end", "segment_id": 176, "tokens_in": 272, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:27.546Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:27.769Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:27.992Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:28.221Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:28.449Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:28.676Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:28.906Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:29.132Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:27.375Z", "event": "prefill_start", "segment_id": 186}
+{"ts": "2026-06-12T04:04:27.688Z", "event": "first_token", "segment_id": 186}
+{"ts": "2026-06-12T04:04:29.147Z", "event": "decode_end", "segment_id": 186, "tokens_in": 217, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:29.357Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:29.587Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:29.816Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:30.043Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:30.272Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:29.147Z", "event": "prefill_start", "segment_id": 196}
+{"ts": "2026-06-12T04:04:29.552Z", "event": "first_token", "segment_id": 196}
+{"ts": "2026-06-12T04:04:30.330Z", "event": "decode_end", "segment_id": 196, "tokens_in": 264, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:30.496Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:30.722Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:30.949Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:31.177Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:31.405Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:31.632Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:30.330Z", "event": "prefill_start", "segment_id": 206}
+{"ts": "2026-06-12T04:04:30.726Z", "event": "first_token", "segment_id": 206}
+{"ts": "2026-06-12T04:04:31.676Z", "event": "decode_end", "segment_id": 206, "tokens_in": 230, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:31.864Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:32.089Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:32.311Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:32.540Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:32.769Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:31.677Z", "event": "prefill_start", "segment_id": 212}
+{"ts": "2026-06-12T04:04:31.991Z", "event": "first_token", "segment_id": 212}
+{"ts": "2026-06-12T04:04:32.780Z", "event": "decode_end", "segment_id": 212, "tokens_in": 219, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:32.997Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:33.226Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:33.453Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:33.679Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:33.907Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:34.134Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:32.781Z", "event": "prefill_start", "segment_id": 222}
+{"ts": "2026-06-12T04:04:33.178Z", "event": "first_token", "segment_id": 222}
+{"ts": "2026-06-12T04:04:34.146Z", "event": "decode_end", "segment_id": 222, "tokens_in": 235, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:34.363Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:34.587Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:34.817Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:35.048Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:35.277Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:35.506Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:34.146Z", "event": "prefill_start", "segment_id": 232}
+{"ts": "2026-06-12T04:04:34.453Z", "event": "first_token", "segment_id": 232}
+{"ts": "2026-06-12T04:04:35.622Z", "event": "decode_end", "segment_id": 232, "tokens_in": 183, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:35.734Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:35.959Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:36.187Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:36.417Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:35.623Z", "event": "prefill_start", "segment_id": 239}
+{"ts": "2026-06-12T04:04:35.937Z", "event": "first_token", "segment_id": 239}
+{"ts": "2026-06-12T04:04:36.564Z", "event": "decode_end", "segment_id": 239, "tokens_in": 214, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:36.639Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:36.867Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:37.094Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:37.319Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:37.547Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:36.565Z", "event": "prefill_start", "segment_id": 249}
+{"ts": "2026-06-12T04:04:36.877Z", "event": "first_token", "segment_id": 249}
+{"ts": "2026-06-12T04:04:37.691Z", "event": "decode_end", "segment_id": 249, "tokens_in": 209, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:37.768Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:37.996Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:38.221Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:38.450Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:38.676Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:38.903Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:37.691Z", "event": "prefill_start", "segment_id": 260}
+{"ts": "2026-06-12T04:04:38.091Z", "event": "first_token", "segment_id": 260}
+{"ts": "2026-06-12T04:04:39.005Z", "event": "decode_end", "segment_id": 260, "tokens_in": 208, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:39.128Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:39.355Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:39.584Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:39.813Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:40.040Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:40.268Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:39.006Z", "event": "prefill_start", "segment_id": 271}
+{"ts": "2026-06-12T04:04:39.312Z", "event": "first_token", "segment_id": 271}
+{"ts": "2026-06-12T04:04:40.486Z", "event": "decode_end", "segment_id": 271, "tokens_in": 176, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:40.494Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:40.721Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:40.954Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:41.183Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:41.411Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:41.641Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:41.868Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:42.095Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:42.322Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:40.487Z", "event": "prefill_start", "segment_id": 282}
+{"ts": "2026-06-12T04:04:40.794Z", "event": "first_token", "segment_id": 282}
+{"ts": "2026-06-12T04:04:42.477Z", "event": "decode_end", "segment_id": 282, "tokens_in": 181, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:42.541Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:42.764Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:42.993Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:43.223Z", "event": "rss_sample", "rss_mb": 139.5}
+{"ts": "2026-06-12T04:04:43.452Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:43.677Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:42.478Z", "event": "prefill_start", "segment_id": 292}
+{"ts": "2026-06-12T04:04:42.877Z", "event": "first_token", "segment_id": 292}
+{"ts": "2026-06-12T04:04:43.870Z", "event": "decode_end", "segment_id": 292, "tokens_in": 202, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:43.894Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:44.122Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:44.348Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:44.575Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:44.803Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:43.871Z", "event": "prefill_start", "segment_id": 302}
+{"ts": "2026-06-12T04:04:44.277Z", "event": "first_token", "segment_id": 302}
+{"ts": "2026-06-12T04:04:44.986Z", "event": "decode_end", "segment_id": 302, "tokens_in": 215, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:45.026Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:45.256Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:45.481Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:45.709Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:45.937Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:46.165Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:46.394Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:46.625Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:46.850Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:44.986Z", "event": "prefill_start", "segment_id": 311}
+{"ts": "2026-06-12T04:04:45.392Z", "event": "first_token", "segment_id": 311}
+{"ts": "2026-06-12T04:04:46.901Z", "event": "decode_end", "segment_id": 311, "tokens_in": 224, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:47.078Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:47.303Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:47.532Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:47.762Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:47.993Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:48.223Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:46.902Z", "event": "prefill_start", "segment_id": 322}
+{"ts": "2026-06-12T04:04:47.303Z", "event": "first_token", "segment_id": 322}
+{"ts": "2026-06-12T04:04:48.224Z", "event": "decode_end", "segment_id": 322, "tokens_in": 229, "tokens_out": 3}
+{"ts": "2026-06-12T04:04:48.452Z", "event": "rss_sample", "rss_mb": 139.1}
+{"ts": "2026-06-12T04:04:48.680Z", "event": "rss_sample", "rss_mb": 139.1}
+{"ts": "2026-06-12T04:04:48.910Z", "event": "rss_sample", "rss_mb": 139.1}
+{"ts": "2026-06-12T04:04:49.137Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:49.364Z", "event": "rss_sample", "rss_mb": 139.0}
+{"ts": "2026-06-12T04:04:48.224Z", "event": "prefill_start", "segment_id": 332}
+{"ts": "2026-06-12T04:04:48.636Z", "event": "first_token", "segment_id": 332}
+{"ts": "2026-06-12T04:04:49.515Z", "event": "decode_end", "segment_id": 332, "tokens_in": 220, "tokens_out": 3}

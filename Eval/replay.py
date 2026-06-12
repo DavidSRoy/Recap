@@ -24,6 +24,7 @@ Usage — cloud GPU/vLLM:
 import argparse
 import asyncio
 import json
+import os
 import subprocess
 import sys
 import threading
@@ -55,12 +56,25 @@ BULLET_SCHEMA = {
 # ── RSS sampling (backend process) ───────────────────────────────────────────
 
 def _backend_pids(base_url: str) -> list[int]:
-    """Guess which process to sample based on the backend URL."""
-    name = "ollama" if "11434" in base_url else "python3"
+    """Find backend process PIDs by scanning full command paths case-insensitively."""
+    our_pid = os.getpid()
+    keyword = "ollama" if "11434" in base_url else "python3"
     try:
-        out = subprocess.check_output(["pgrep", "-x", name], text=True)
-        return [int(p) for p in out.split() if p.strip()]
-    except subprocess.CalledProcessError:
+        out = subprocess.check_output(
+            ["ps", "-eo", "pid,args"], text=True, stderr=subprocess.DEVNULL
+        )
+        pids = []
+        for line in out.splitlines()[1:]:
+            parts = line.split(None, 1)
+            if len(parts) == 2 and keyword.lower() in parts[1].lower():
+                try:
+                    pid = int(parts[0].strip())
+                    if pid != our_pid:
+                        pids.append(pid)
+                except ValueError:
+                    pass
+        return pids
+    except Exception:
         return []
 
 

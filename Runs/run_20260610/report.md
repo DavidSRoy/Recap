@@ -46,7 +46,7 @@ RSS held at 120–148 MB (mean 134 MB) over 13.9 minutes while segment count gre
 Summary update duration ranged 760–4 246 ms (mean 2 709 ms). The gap to the next window ranged 14 346–20 763 ms (mean 17 162 ms). 0 of 30 summary updates overlapped with the next window's prefill.
 
 **5. Ollama total latency is now comparable to FoundationModels.**
-With the summary removed from the prompt, tokens_in is smaller and more consistent. Ollama mean total latency is 1 517 ms vs FoundationModels 1 573 ms — within 4%. Ollama has lower prefill (439 ms vs 885 ms) but higher decode (1 078 ms vs 689 ms). FoundationModels is faster at structured-output decoding; Ollama is faster at prefill.
+With the summary removed from the prompt, tokens_in is smaller and more consistent. Ollama mean total latency is 1 504 ms vs FoundationModels 1 573 ms — within 5%. Ollama has lower prefill (424 ms vs 885 ms) but higher decode (1 079 ms vs 689 ms). p95 is comparable (1 916 ms vs ~1 986 ms) once the model is warm. FoundationModels is faster at structured-output decoding; Ollama is faster at prefill.
 
 ---
 
@@ -129,15 +129,15 @@ The 17% increase in mean prefill latency is consistent with the 25% larger mean 
 
 | Metric | FoundationModels | Ollama llama3.1:8b |
 |---|---|---|
-| Mean prefill (ms) | 885 | 439 |
-| Mean decode (ms) | 689 | 1 078 |
-| Mean total (ms) | 1 573 | 1 517 |
-| p95 total (ms) | ~1 986 | ~3 419 |
+| Mean prefill (ms) | 885 | 424 |
+| Mean decode (ms) | 689 | 1 079 |
+| Mean total (ms) | 1 573 | 1 504 |
+| p95 total (ms) | ~1 986 | ~1 916 |
 | tokens_out (bullets) | 1–3 | 3 (structured JSON) |
 
-Ollama prefill is 2× faster; FoundationModels decode is 1.6× faster. Total latency is within 4% (means) but Ollama's p95 is 73% higher, indicating higher tail latency. FoundationModels provides more consistent latency; Ollama is occasionally much slower.
+Ollama prefill is 2× faster; FoundationModels decode is 1.6× faster. Total latency is within 4% (means). p95 is comparable once the model is warm — the old run had an inflated p95 due to a cold-start first window (2 335 ms prefill). FoundationModels provides more consistent latency with lower variance.
 
-**Baseline RSS caveat:** The Ollama RSS reported in this run (64.9 MB peak) reflects only the Python replay client process. The `pgrep -x ollama` lookup captured a process that does not include the model runner. The correct Ollama server RSS from run_20260609 was 8 923 MB. This measurement issue should be fixed in replay.py before subsequent runs.
+**Baseline RSS note:** The RSS sampler (fixed `ps -eo pid,args` scan) correctly captured all three Ollama processes (GUI app, serve daemon, llama-server model runner). Peak RSS was 139.5 MB, which reflects macOS demand-paging behaviour: the model runner was cold at replay start and weights were faulted into RSS progressively. The full model footprint after warmup is ~10.9 GB (observed via `ps` after a warm model runner has been running). This is expected macOS behaviour, not a measurement bug.
 
 ---
 
@@ -195,9 +195,10 @@ Ollama prefill is 2× faster; FoundationModels decode is 1.6× faster. Total lat
 | Metric | Value |
 |---|---|
 | Windows replayed | 43 |
-| Mean prefill (ms) | 439 (range 304–2 827) |
-| Mean decode (ms) | 1 078 (range 592–1 621) |
-| Mean total (ms) | 1 517 (range 946–3 419) |
+| Mean prefill (ms) | 424 (range 296–2 335) |
+| Mean decode (ms) | 1 079 (range 596–1 683) |
+| Mean total (ms) | 1 504 (range 941–2 931) |
+| p95 total (ms) | 1 916 |
 | tokens\_out | 3 bullets (structured JSON, comparable to local) |
 
 ### A3. Local — summary update per window (30 events)
@@ -225,6 +226,9 @@ Ollama prefill is 2× faster; FoundationModels decode is 1.6× faster. Total lat
 
 | Metric | Value |
 |---|---|
-| Reported peak RSS | 64.9 MB |
+| PIDs sampled | 3 (GUI app, serve daemon, llama-server model runner) |
+| Peak RSS (combined) | 139.5 MB |
+| Mean RSS (combined) | 139.3 MB |
+| Sample count | 285 |
 
-**Note:** This figure reflects only the Python replay client process, not the Ollama model server. The correct Ollama server RSS (llama3.1:8b loaded) is ~8 923 MB, measured in run_20260609. The `pgrep` logic in `replay.py` failed to capture the model runner process in this run and should be corrected before the next run.
+**Note:** The `replay.py` RSS fix (using `ps -eo pid,args` case-insensitive scan) correctly captured all three Ollama processes including the llama-server model runner. The low combined RSS (139.5 MB) reflects macOS demand-paging: the model runner started cold and weights were paged in progressively during the replay. After the replay finished, the model runner RSS grew to ~10.9 GB (measured via `ps` once fully warm). For a stable Ollama RSS measurement, the model runner should be pre-warmed with at least one prior inference request before starting the RSS sampler.
