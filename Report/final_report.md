@@ -18,10 +18,10 @@ End-to-end latency is critical for this application: the bullet points the user 
 
 The system uses an **orchestrator–subagent** pattern with two specialised agents running concurrently:
 
-- **Planner agent** — given the last 25 seconds of transcript and the 5 most recent bullets, decides whether there is a new idea worth surfacing. Returns up to 3 bullet points, or signals "keep listening" if the window contains insufficient content.
+- **Bullet agent** — given the last 25 seconds of transcript and the 5 most recent bullets, extracts up to 3 new bullet points. The orchestrator gates invocation on a 20-word minimum; if the model finds nothing substantive it returns an empty array (guided by an `@Guide` instruction) and the window is skipped. There is no separate planning step — the "summarise or keep listening" decision is implicit in the model's output.
 - **Summarizer agent** — given the new bullets, integrates them into a rolling prose summary capped at 50 words. Runs in parallel with the next audio window being buffered, not on the critical path.
 
-This maps to the **planning** and **reflection** patterns described in the proposal. The planner handles the planning decision (summarise now or keep listening). The summarizer handles reflection — continuously maintaining a compressed representation of the full session that could be used to contextualise future windows. In the current implementation the summary is maintained but intentionally excluded from the planner prompt (see below); this architectural choice is the central experimental finding.
+This maps loosely to the **planning** and **reflection** patterns described in the proposal. The proposal envisioned a dedicated planning agent that explicitly decided whether to summarise; in the implementation that decision collapsed into a single LLM call — the model either returns bullets or an empty array. The summarizer handles the reflection role, continuously maintaining a compressed representation of the full session. In the current implementation the summary is maintained but intentionally excluded from the bullet agent's prompt (see below); this architectural choice is the central experimental finding.
 
 ### Architecture
 
