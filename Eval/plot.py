@@ -4,10 +4,10 @@ Generate figures from Recap JSONL files.
 
   ttft.png            — TTFT per window, local vs baseline
   rss.png             — App RSS over session time (local only)
-  prefill_scaling.png — E1: prefill_ms vs tokens_in scatter + regression
-  rss_plateau.png     — E2: RSS + cumulative segment count vs time
-  tokens_plateau.png  — E3: tokens_in + summary words vs window index
-  summary_gap.png     — E4: summary-update duration vs gap to next window
+  prefill_scaling.png — Latency: prefill_ms vs tokens_in scatter + regression
+  rss_plateau.png     — Memory: RSS + cumulative segment count vs time
+  tokens_plateau.png  — Prompt size: tokens_in + summary words vs window index
+  summary_gap.png     — Parallel summary: summary-update duration vs gap to next window
 
 Usage:
     python Eval/plot.py \\
@@ -239,7 +239,7 @@ def fig_rss(local_events, outdir):
 
 
 def fig_prefill_scaling(local_events, baseline_events, outdir):
-    """E1 — prefill_ms vs tokens_in scatter + regression."""
+    """Latency — prefill_ms vs tokens_in scatter + regression."""
     lt, lp = prefill_vs_tokens(local_events)
     bt, bp = prefill_vs_tokens(baseline_events)
 
@@ -261,7 +261,7 @@ def fig_prefill_scaling(local_events, baseline_events, outdir):
 
     ax.set_xlabel("Input tokens (words)")
     ax.set_ylabel("Prefill latency / TTFT (ms)")
-    ax.set_title("E1 — Prefill Latency Scales with Input Length")
+    ax.set_title("Latency — Prefill and Decode vs Input Length")
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
@@ -269,7 +269,7 @@ def fig_prefill_scaling(local_events, baseline_events, outdir):
 
 
 def fig_rss_plateau(local_events, outdir):
-    """E2 — RSS (left axis) + cumulative segment count (right axis) vs session time."""
+    """Memory — RSS (left axis) + cumulative segment count (right axis) vs session time."""
     rtimes, rss = rss_series(local_events)
     stimes, scounts = segment_count_series(local_events)
 
@@ -291,7 +291,7 @@ def fig_rss_plateau(local_events, outdir):
         ax2.set_ylabel("Cumulative segments", color="#2ca02c")
         ax2.tick_params(axis="y", labelcolor="#2ca02c")
 
-    ax1.set_title("E2 — RSS vs Segment Count (memory plateau test)")
+    ax1.set_title("Memory — RSS vs Segment Count")
     lines1, labels1 = ax1.get_legend_handles_labels()
     lines2, labels2 = (ax2.get_legend_handles_labels() if stimes else ([], []))
     ax1.legend(lines1 + lines2, labels1 + labels2, loc="lower right", fontsize=8)
@@ -300,7 +300,7 @@ def fig_rss_plateau(local_events, outdir):
 
 
 def fig_tokens_plateau(local_events, outdir):
-    """E3 — tokens_in (left) + summary word count (right) vs window index."""
+    """Prompt size — tokens_in (left) + summary word count (right) vs window index."""
     indices, tokens, words = tokens_and_words_series(local_events)
     if not indices:
         print("No decode_end events — skipping tokens_plateau.png")
@@ -326,7 +326,7 @@ def fig_tokens_plateau(local_events, outdir):
         ax2.set_ylabel("Summary word count", color="#d62728")
         ax2.tick_params(axis="y", labelcolor="#d62728")
 
-    ax1.set_title("E3 — Prompt Size and Summary Growth per Window")
+    ax1.set_title("Prompt Size — Input Tokens and Summary Growth per Window")
     lines1, labels1 = ax1.get_legend_handles_labels()
     lines2, labels2 = (ax2.get_legend_handles_labels() if word_vals else ([], []))
     ax1.legend(lines1 + lines2, labels1 + labels2, loc="upper left", fontsize=8)
@@ -335,11 +335,11 @@ def fig_tokens_plateau(local_events, outdir):
 
 
 def fig_summary_gap(local_events, outdir):
-    """E4 — summary-update duration vs gap to next window (critical-path test)."""
+    """Parallel summary — summary-update duration vs gap to next window."""
     rows = summary_gap_series(local_events)
     rows_with_gap = [(i, su, gap) for i, su, gap in rows if gap is not None]
     if not rows_with_gap:
-        print("Not enough windows for E4 — skipping summary_gap.png")
+        print("Not enough windows for parallel summary chart — skipping summary_gap.png")
         return
 
     indices = [r[0] for r in rows_with_gap]
@@ -358,8 +358,8 @@ def fig_summary_gap(local_events, outdir):
     ax.set_xticklabels([f"W{i}" for i in indices])
     ax.set_xlabel("Window")
     ax.set_ylabel("Time (ms)")
-    ax.set_title("E4 — Summary Update vs Gap to Next Window\n"
-                 "(positive gap = summary not on critical path)")
+    ax.set_title("Parallel Summary — Update Duration vs Gap to Next Window\n"
+                 "(positive gap = not on critical path)")
     ax.legend(fontsize=8)
     ax.grid(True, alpha=0.2, axis="y")
 

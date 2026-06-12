@@ -23,14 +23,14 @@
 
 | Claim | Verdict |
 |---|---|
-| E1 — Prefill is the primary bottleneck | **Confirmed** — removing summary from prompt collapsed R² from 0.73 to 0.003; prefill dominant at 57% of total |
-| E2 — Memory is not a bottleneck | **Confirmed** — RSS 1.8% std over last 5 min of 13.9-min session |
-| E3 — tokens\_in stabilises once summary is bounded | **Confirmed** — tokens\_in stable throughout; summary reached 183/200 words (cap not yet engaged) |
-| E4 — Parallel summary is not on the critical path | **Confirmed** — 0/30 on critical path, 6× gap headroom |
+| Latency | **Confirmed** — removing summary from prompt collapsed R² from 0.73 to 0.003; prefill dominant at 57% of total |
+| Memory | **Confirmed** — RSS 1.8% std over last 5 min of 13.9-min session |
+| Prompt size | **Confirmed** — tokens\_in stable throughout; summary reached 183/200 words (cap not yet engaged) |
+| Parallel summary | **Confirmed** — 0/30 on critical path, 6× gap headroom |
 
 ---
 
-## E1 — Prefill is the primary bottleneck
+## Latency
 
 **Confirmed in stable-latency regime.** Removing the summary from the planner prompt collapsed the tokens\_in → latency correlation: prefill R² dropped from 0.71 to 0.003, decode R² from 0.85 to 0.032. Latency is now content-driven rather than session-age-driven. Prefill averages 885 ms (57% of total) vs decode 689 ms. Mean total latency 1 574 ms is nearly identical to run_20260609 (1 406 ms), but variance is stable.
 
@@ -38,7 +38,7 @@
 
 ---
 
-## E2 — Memory is not a bottleneck
+## Memory
 
 **Confirmed at 13.9 minutes.** RSS held at 120–148 MB (mean 134 MB) while segment count grew to 335. Last-5-min std 2.5 MB (1.8% of mean).
 
@@ -46,7 +46,7 @@
 
 ---
 
-## E3 — tokens\_in stabilises once summary is bounded
+## Prompt size
 
 **Confirmed.** tokens\_in ranged 106–309 (mean 223) with no upward trend across all 38 windows. The bound comes from the architecture — summary is not in the planner prompt, so only the 25 s transcript window and the 5 prior bullets determine prompt size, both of which are capped. Summary reached 183/200 words (cap not yet engaged in this run).
 
@@ -54,7 +54,7 @@
 
 ---
 
-## E4 — Parallel summary is not on the critical path
+## Parallel summary
 
 **Confirmed.** Summary update duration 760–4 246 ms (mean 2 709 ms). Gap to next prefill 14 346–20 763 ms (mean 17 162 ms). 0/30 on critical path. Gap is 6× mean summary duration.
 

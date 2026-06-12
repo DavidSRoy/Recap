@@ -21,16 +21,16 @@
 
 | Claim | Verdict |
 |---|---|
-| E1 — Prefill is the primary bottleneck | **Partial** — both prefill and decode scale with tokens\_in; decode overtakes prefill by window 4 |
-| E2 — Memory is not a bottleneck | **Directional** — RSS flat, but session too short for steady-state confirmation |
-| E3 — tokens\_in stabilises once summary is bounded | **Confounded** — echo bug inflated tokens\_in independent of summary size |
-| E4 — Parallel summary is not on the critical path | **Confirmed** — 0/6 windows on critical path |
+| Latency | **Partial** — both prefill and decode scale with tokens\_in; decode overtakes prefill by window 4 |
+| Memory | **Directional** — RSS flat, but session too short for steady-state confirmation |
+| Prompt size | **Confounded** — echo bug inflated tokens\_in independent of summary size |
+| Parallel summary | **Confirmed** — 0/6 windows on critical path |
 
 **Run caveats:** (1) A prompt-echo bug caused the model to occasionally output `"Prior bullets"` as a bullet text, re-injecting it into subsequent prompts and inflating tokens\_in. Fixed after this run. (2) Summary `duration_ms` was not yet logged; durations are approximated from event timestamps. (3) Baseline `tokens_out` is SSE chunk count, not bullet count — not comparable to local.
 
 ---
 
-## E1 — Prefill is the primary bottleneck
+## Latency
 
 **Partial.** Prefill dominates in windows 1–3 (66–71% of total), but decode overtakes it from window 4 onward as tokens\_in grows. Both metrics scale linearly with tokens\_in — prefill at 0.87 ms/token (R² = 0.71), decode at 3.62 ms/token (R² = 0.85). The steeper decode slope is likely due to FoundationModels attending over the full context during constrained structured-output generation. The key practical result: any reduction in prompt length reduces both phases, with the largest gains from shorter prompts.
 
@@ -38,7 +38,7 @@
 
 ---
 
-## E2 — Memory is not a bottleneck
+## Memory
 
 **Directional.** RSS held at 117–136 MB (mean 129 MB) while segment count grew to 27. Rolling summary plateaued at 88 words by window 3. Session is too short (2.4 min) for a steady-state confirmation, but the plateau behaviour is already visible.
 
@@ -46,7 +46,7 @@
 
 ---
 
-## E3 — tokens\_in stabilises once summary is bounded
+## Prompt size
 
 **Confounded.** Summary words plateaued at 88 by window 3, but tokens\_in continued growing from 58 to 262 across all 7 windows due to the echo bug (prompt scaffolding labels re-injected as bullets). After the fix, the expectation is that tokens\_in will track summary growth and stabilise once the cap engages.
 
@@ -54,7 +54,7 @@
 
 ---
 
-## E4 — Parallel summary is not on the critical path
+## Parallel summary
 
 **Confirmed.** Summary update duration 693–1 486 ms; gap to next prefill 6 948–50 274 ms. 0/6 on critical path.
 

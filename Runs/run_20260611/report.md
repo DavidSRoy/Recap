@@ -23,14 +23,14 @@
 
 | Claim | Verdict |
 |---|---|
-| E1 — Prefill is the primary bottleneck | **Confirmed** — prefill 911 ms (59% of total), R² = 0.007 |
-| E2 — Memory is not a bottleneck | **Confirmed** — RSS 3.7% std over last 5 min |
-| E3 — tokens\_in stabilises once summary is bounded | **Confirmed** — 50-word cap engaged by window 8; tokens\_in bounded throughout |
-| E4 — Parallel summary is not on the critical path | **Confirmed** — 0/15 on critical path, 17× gap headroom |
+| Latency | **Confirmed** — prefill 911 ms (59% of total), R² = 0.007 |
+| Memory | **Confirmed** — RSS 3.7% std over last 5 min |
+| Prompt size | **Confirmed** — 50-word cap engaged by window 8; tokens\_in bounded throughout |
+| Parallel summary | **Confirmed** — 0/15 on critical path, 17× gap headroom |
 
 ---
 
-## E1 — Prefill is the primary bottleneck
+## Latency
 
 **Confirmed.** Prefill averages 911 ms (59% of total) vs decode 625 ms. No correlation with tokens\_in (R² = 0.007). Mean total latency 1 536 ms is consistent with run_20260610 (1 574 ms).
 
@@ -38,7 +38,7 @@
 
 ---
 
-## E2 — Memory is not a bottleneck
+## Memory
 
 **Confirmed.** RSS held at 121–143 MB (mean 131 MB) while segment count grew to 54. Last-5-min std 4.9 MB (3.7% of mean).
 
@@ -46,7 +46,7 @@
 
 ---
 
-## E3 — tokens\_in stabilises once summary is bounded
+## Prompt size
 
 **Confirmed.** Summary grew from 23 to 50 words (cap) by window 8 and held there for windows 9–18. tokens\_in ranged 96–299 (mean 213) with no trend throughout — consistent with the architectural result from run_20260610: the bound comes from removing the summary from the planner prompt, not from the cap itself. The cap bounds summary-update prompt size and latency.
 
@@ -54,7 +54,7 @@
 
 ---
 
-## E4 — Parallel summary is not on the critical path
+## Parallel summary
 
 **Confirmed.** Summary update duration 556–1 974 ms (mean 1 153 ms). Gap to next prefill 17 018–23 152 ms (mean 20 157 ms). 0/15 on critical path. Gap is 17× mean summary duration. Lower summary duration than run_20260610 (1 153 vs 2 709 ms) because the 50-word cap keeps the summary-update prompt small.
 
