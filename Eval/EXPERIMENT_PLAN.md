@@ -143,7 +143,7 @@ python Eval/plot.py \
 **How to read:** Plot `tokens_in` and `summary_update.words` on the same time axis. The hypothesis predicts that once `words` stops growing (summary cap engaged), `tokens_in` stops growing too.
 
 **Success:**
-- `summary_update.words` reaches ≤ 500 and stays within ± 20 words for the last 5 windows
+- `summary_update.words` reaches ≤ 50 and stays within ± 10 words for the last 5 windows
 - `tokens_in` growth rate in the last 5 windows is < 5 tokens/window
 
 **Figure:** `Report/figures/tokens_plateau.png` — `tokens_in` and `summary.words` vs window index, dual axis

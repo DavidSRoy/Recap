@@ -155,26 +155,29 @@ def segment_count_series(events: list) -> tuple:
 
 def summary_gap_series(events: list) -> tuple:
     """
-    For each window returns (window_index, su_duration_ms, gap_ms).
-    su_duration_ms ≈ summary_update.ts - decode_end.ts (approximation until
-    SummaryStore logs duration_ms directly).
-    gap_ms = next prefill_start.ts - summary_update.ts  (negative = on critical path).
+    For each summary_update event returns (index, su_duration_ms, gap_ms).
+    su_duration_ms: from logged duration_ms field if present, else approximated.
+    gap_ms: time from summary_update.ts to the NEXT prefill_start chronologically.
+    Negative gap = summary was still running when the next window started.
     """
-    decode_events   = [e for e in events if e.get("event") == "decode_end"]
-    summary_events  = [e for e in events if e.get("event") == "summary_update"]
-    prefill_events  = [e for e in events if e.get("event") == "prefill_start"]
+    summary_events = [e for e in events if e.get("event") == "summary_update"]
+    prefill_times  = sorted(parse_ms(e["ts"]) for e in events if e.get("event") == "prefill_start")
+    decode_events  = [e for e in events if e.get("event") == "decode_end"]
 
     rows = []
-    for i, (d, s) in enumerate(zip(decode_events, summary_events)):
-        # Prefer logged duration_ms if present (new schema), else approximate.
+    for i, s in enumerate(summary_events):
+        su_end = parse_ms(s["ts"])
+
         if "duration_ms" in s:
             su_ms = s["duration_ms"]
         else:
-            su_ms = parse_ms(s["ts"]) - parse_ms(d["ts"])
+            # Approximate: find the decode_end closest before this summary_update.
+            prior = [e for e in decode_events if parse_ms(e["ts"]) < su_end]
+            su_ms = (su_end - parse_ms(prior[-1]["ts"])) if prior else 0
 
-        gap_ms = None
-        if i + 1 < len(prefill_events):
-            gap_ms = parse_ms(prefill_events[i + 1]["ts"]) - parse_ms(s["ts"])
+        # Next prefill_start that begins AFTER this summary_update completes.
+        future = [t for t in prefill_times if t > su_end]
+        gap_ms = (min(future) - su_end) if future else None
 
         rows.append((i + 1, su_ms, gap_ms))
     return rows
@@ -317,8 +320,9 @@ def fig_tokens_plateau(local_events, outdir):
         ax2 = ax1.twinx()
         ax2.plot(word_idx, word_vals, marker="s", linewidth=1.4, color="#d62728",
                  linestyle="--", label="Summary words")
-        ax2.axhline(500, color="#d62728", linewidth=0.8, linestyle=":", alpha=0.5,
-                    label="500-word cap")
+        cap = max(word_vals)
+        ax2.axhline(cap, color="#d62728", linewidth=0.8, linestyle=":", alpha=0.5,
+                    label=f"{cap}-word cap")
         ax2.set_ylabel("Summary word count", color="#d62728")
         ax2.tick_params(axis="y", labelcolor="#d62728")
 

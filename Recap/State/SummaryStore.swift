@@ -3,7 +3,7 @@ import FoundationModels
 
 actor SummaryStore {
     private(set) var current: String = ""
-    private let maxWords = 200
+    private let maxWords = 50
 
     func reset() { current = "" }
 
