@@ -52,9 +52,8 @@ Microphone / Audio file
 
 - **Structured output.** Both agents use schema-constrained generation (`@Generable BulletOutput`, JSON schema for Ollama). No free-text parsing; output is typed at the framework level.
 
-- **Actor-serialized summary store.** `SummaryStore` is a Swift actor. Concurrent summary updates are serialized automatically; the orchestrator unlocks immediately after the planner returns, not after the summary update completes.
 
-- **Word-count summary cap.** The summary is truncated to ≤ 50 words at sentence boundaries after each update, bounding summary-update prompt size and latency.
+- **Word-count summary cap.** The summary is truncated to ≤ 50 words at sentence boundaries after each update, bounding summary-update prompt size and latency. I experimented with 500, 200, and 50 as limits, but 50 is what makes sense in practice, as anything longer is too long to read.
 
 - **Deduplication.** New bullets are filtered against prior bullets using edit-distance similarity. A prompt-echo filter additionally rejects bullets that reproduce prompt scaffolding labels or contain fewer than 4 words.
 
@@ -84,19 +83,21 @@ This is consistent with standard LLM benchmarking conventions. Three caveats app
 
 ### Experiment
 
-Three runs were conducted with progressively refined configuration:
+**Hypothesis.** Because the application runs locally, prefill is expected to be the primary latency bottleneck: the full prompt must be processed to build the KV cache before the first token can be generated, and that cost scales with prompt length. Memory is not expected to be a bottleneck because the rolling summary stays at a bounded size — it should not grow linearly with session length. A consequence is that if prompt size is bounded, latency should also be stable across a session regardless of how long it has been running. A proposed optimisation — running the summary update concurrently with the next audio window — was expected to reduce end-to-end latency.
 
-| Run | Duration | Windows | Summary in planner | Summary cap | Notes |
+**What we varied.** The central independent variable is whether the rolling summary is included in the bullet-extraction prompt. In the initial design the prompt contained `[summary] + [transcript] + [prior bullets]`; as the session ages the summary grows, causing the prompt to grow and latency to scale with session duration. The hypothesis was that removing the summary from this prompt would decouple latency from session age. The summary cap was also varied (500 → 200 → 50 words) to control how quickly the cap engages and to bound summary-update latency.
+
+**What we kept constant.** Audio content (same speaker and recording conditions across runs), window cadence (20 s), audio window size (25 s), prior-bullet context (last 5 bullets), inference backend (Apple FoundationModels, with Ollama llama3.1:8b as a held-out baseline replayed from the same JSONL on identical prompts).
+
+**Runs.**
+
+| Run | Duration | Windows | Summary in prompt | Summary cap | Notes |
 |---|---|---|---|---|---|
 | run_20260609 | 2.4 min | 7 | **Yes** | 500 words | Pilot; prompt-echo bug present |
-| run_20260610 | 13.9 min | 38 | No | 200 words | Summary removed from planner prompt |
+| run_20260610 | 13.9 min | 38 | No | 200 words | Summary removed from prompt |
 | run_20260611 | 6.4 min | 18 | No | **50 words** | Cap reduced to force early engagement |
 
-The key experimental variable between run 1 and run 2 was whether the rolling summary was included in the planner prompt. In run 1 the planner received `[summary] + [transcript] + [prior bullets]`; in runs 2–3 it receives only `[transcript] + [prior bullets]`. This was hypothesised to prevent prompt size — and therefore latency — from growing with session age.
-
-The summary cap was reduced from 500 → 200 → 50 words across runs for two reasons: (1) to ensure the cap engages within a short session, producing observable evidence that summary size is bounded; (2) to keep summary-update prompt size and latency small and stable. At 50 words the cap engaged by window 8 (~2.7 min) in run 3 and held for the remaining 10 windows.
-
-Each run includes an Ollama llama3.1:8b baseline replayed from the same JSONL, allowing direct latency comparison on identical prompts without re-running audio.
+At 50 words the cap engaged by window 8 (~2.7 min) in run 3 and held for the remaining 10 windows. Each run's JSONL was replayed through Ollama to produce a matched baseline without re-running audio.
 
 ### Latency
 
