@@ -16,12 +16,12 @@ End-to-end latency is critical for this application: the bullet points the user 
 
 ### Agentic design
 
-The system uses an **orchestrator–subagent** pattern with two specialised agents running concurrently:
+The system uses an **orchestrator–subagent** pattern. A central coordinator (`RecapModel`) owns the session loop and dispatches to two LLM calls on a fixed 20-second timer:
 
-- **Bullet agent** — given the last 25 seconds of transcript and the 5 most recent bullets, extracts up to 3 new bullet points. The orchestrator gates invocation on a 20-word minimum; if the model finds nothing substantive it returns an empty array (guided by an `@Guide` instruction) and the window is skipped. There is no separate planning step — the "summarise or keep listening" decision is implicit in the model's output.
-- **Summarizer agent** — given the new bullets, integrates them into a rolling prose summary capped at 50 words. Runs in parallel with the next audio window being buffered, not on the critical path.
+- **Bullet extraction** (`SummarizerClient`) — given the last 25 seconds of transcript and the 5 most recent bullets, extracts up to 3 new bullet points. Invocation is gated on a 20-word minimum in the transcript window; if the model finds nothing substantive it returns an empty array and the window is skipped.
+- **Summary update** (`SummaryStore`) — given the new bullets, compresses them into a rolling prose summary capped at 50 words. Runs concurrently with the next audio window being buffered.
 
-This maps loosely to the **planning** and **reflection** patterns described in the proposal. The proposal envisioned a dedicated planning agent that explicitly decided whether to summarise; in the implementation that decision collapsed into a single LLM call — the model either returns bullets or an empty array. The summarizer handles the reflection role, continuously maintaining a compressed representation of the full session. In the current implementation the summary is maintained but intentionally excluded from the bullet agent's prompt (see below); this architectural choice is the central experimental finding.
+Neither call involves autonomous decision-making about when to run — both are triggered mechanically by the orchestrator. The proposal envisioned a dedicated planning agent that would decide whether to summarise; in practice that collapsed into a word-count gate and a structured-output call that either produces bullets or doesn't.
 
 ### Architecture
 
