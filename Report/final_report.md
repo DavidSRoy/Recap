@@ -111,7 +111,9 @@ At 50 words the cap engaged by window 8 (~2.7 min) in run 3 and held for the rem
 
 Total latency is ~1.5 s for both backends. FoundationModels is faster at decode (1.6–1.7×); Ollama is faster at prefill (2–2.4×). At the 20 s window cadence, either backend completes inference well within the next window interval.
 
-**Latency is session-age-independent.** Removing the rolling summary from the planner prompt collapsed the tokens\_in → latency correlation from R² ≈ 0.73 (run 1, summary in prompt) to R² ≈ 0.003 (runs 2–3). In run 1, both prefill and decode grew linearly with tokens\_in as the summary accumulated; decode scaled 4× faster than prefill (3.62 vs 0.87 ms/token), likely because constrained structured-output decoding attends over the full context at each step. After the architectural change, latency variance is driven by transcript content density, not session length.
+**Latency is session-age-independent.** Removing the rolling summary from the planner prompt collapsed the tokens\_in → latency correlation from R² ≈ 0.86 (run 1, summary in prompt) to R² ≈ 0.13 (runs 2–3 combined). Per-run R² for runs 2 and 3 individually is 0.003 and 0.007 respectively — the residual combined R² reflects variation across two different sessions, not a within-session trend. In run 1, both prefill and decode grew linearly with tokens\_in as the summary accumulated; decode scaled 4× faster than prefill (3.62 vs 0.87 ms/token), likely because constrained structured-output decoding attends over the full context at each step. After the architectural change, latency variance is driven by transcript content density, not session length.
+
+![Latency before and after architectural change](figures/latency_before_after.png)
 
 ### Memory
 
@@ -121,7 +123,9 @@ Total latency is ~1.5 s for both backends. FoundationModels is faster at decode 
 | Last-5-min RSS std | 1.8–3.7% of mean |
 | Ollama model server RSS | ~9.4 GB (warm, llama3.1:8b) |
 
-App process memory is flat and session-length-independent. Segment count grows linearly throughout each run with no corresponding RSS growth. FoundationModels model weights are shared with the OS-level Apple Intelligence runtime and do not appear in app RSS.
+App process memory is flat and session-length-independent across all three runs and all three summary cap configurations. Segment count grows linearly throughout each run with no corresponding RSS growth. FoundationModels model weights are shared with the OS-level Apple Intelligence runtime and do not appear in app RSS.
+
+![App RSS over session time across all runs](figures/memory_all_runs.png)
 
 ### Prompt size
 
@@ -132,6 +136,10 @@ App process memory is flat and session-length-independent. Segment count grows l
 | Summary words (50-word cap run) | Cap engaged by window 8 (~2.7 min); held for remaining windows |
 
 tokens\_in is bounded by the 25 s transcript window size and the 5-bullet prior context — both architecturally capped. The summary cap additionally bounds summary-update prompt size and latency. Notably, tokens\_in was stable even before the cap engaged: since the summary is not in the planner prompt, prompt size depends only on speech density in the current window and the prior-bullet count, both of which are independent of session age.
+
+![Prompt size per window across all runs](figures/prompt_size_all_runs.png)
+
+![Summary growth and cap engagement per run](figures/summary_cap_engagement.png)
 
 ### Parallel summary
 
